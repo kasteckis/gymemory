@@ -7,3 +7,4 @@ git pull
 
 cd backend
 composer install --no-dev
+php artisan config:cache
