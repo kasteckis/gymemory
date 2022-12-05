@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /var/www/api.gymemory.kasteckis.lt
+cd /var/www/gymemory.kasteckis.lt
 
 git checkout --
 git pull
