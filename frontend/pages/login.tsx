@@ -5,7 +5,7 @@ export default function Home() {
         <>
             <Head>
                 <title>GyMemory | Login</title>
-                <meta name="description" content="Sign up to access all of the features on gymemory" />
+                <meta name="description" content="Sign in to access all of the features on gymemory" />
             </Head>
             <div>
                 <h1 style={{textAlign: 'center'}}>Login</h1>
