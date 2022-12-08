@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <meta name="description" content="GyMemory" />
           <link rel="manifest" href="/manifest.json" />
           <link rel="apple-touch-icon" href="/icons/icon-152x152.png"></link>
-          <meta name="theme-color" content="#000000" />
+          <meta name="theme-color" content="#121212" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <ThemeProvider theme={darkTheme}>
