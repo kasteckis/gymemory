@@ -7,10 +7,13 @@ export default function Home() {
       <Head>
         <title>GyMemory</title>
         <meta name="description" content="GyMemory" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon.png"></link>
+        <meta name="theme-color" content="#000000" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 style={{textAlign: 'center'}}>GyMemory - coming soon!</h1>
+      <h1 style={{textAlign: 'center'}}>GyMemory - coming soon!!</h1>
     </div>
   )
 }
