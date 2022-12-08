@@ -30,6 +30,8 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
+        auth()->user()->update(['last_login_ip' => request()->ip()]);
+
         return $this->respondWithToken($token);
     }
 
@@ -74,6 +76,8 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        auth()->factory()->setTTL(10080);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
