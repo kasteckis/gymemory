@@ -8,7 +8,7 @@ export default function Home() {
         <title>GyMemory</title>
         <meta name="description" content="GyMemory" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icon.png"></link>
+        <link rel="apple-touch-icon" href="/icons/icon.png"></link>
         <meta name="theme-color" content="#000000" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
