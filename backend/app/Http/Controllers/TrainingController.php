@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTrainingRequest;
 use App\Http\Requests\UpdateTrainingRequest;
 use App\Models\Training;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TrainingController extends Controller
 {
@@ -15,17 +17,13 @@ class TrainingController extends Controller
      */
     public function index()
     {
-        //
-    }
+        if (auth()->user()) {
+            return Training::where('user_id', auth()->user()->id)->get();
+        } else if (isset(request()->query()['guest-code'])) {
+            return Training::where('guest_code', request()->query()['guest-code'])->get();
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        throw new BadRequestHttpException('');
     }
 
     /**
@@ -36,29 +34,36 @@ class TrainingController extends Controller
      */
     public function store(StoreTrainingRequest $request)
     {
-        //
+        $training = new Training();
+        $training->user_id = auth()->user()->id;
+        $training->name = $request->name;
+        $training->description = $request->description;
+        $training->save();
+
+        return $training;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Training  $training
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Training $training)
+    public function show(int $id)
     {
-        //
-    }
+        $training = Training::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Training  $training
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Training $training)
-    {
-        //
+        if (auth()->user()) {
+            if ($training->user_id === auth()->user()->id) {
+                return $training;
+            }
+        } else if (isset(request()->query()['guest-code'])) {
+            if ($training->guest_code === request()->query()['guest-code']) {
+                return $training;
+            }
+        }
+
+        throw new NotFoundHttpException('');
     }
 
     /**

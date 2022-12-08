@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,12 @@ Route::middleware('auth')->get('test', function () {
 });
 
 Route::post('register', [UserController::class, 'register']);
+
+Route::get('trainings', [TrainingController::class, 'index']);
+Route::post('training', [TrainingController::class, 'store']);
+Route::get('training/{id}', [TrainingController::class, 'show']);
+Route::put('training/{id}', [TrainingController::class, 'update']);
+Route::delete('training/{id}', [TrainingController::class, 'destroy']);
 
 Route::group([
     'middleware' => 'api',
