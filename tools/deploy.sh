@@ -6,7 +6,7 @@ git checkout --
 git pull
 
 cd backend
-composer install --no-dev
+composer install --optimize-autoloader --no-dev
 php artisan cache:clear
 php artisan route:clear
 php artisan config:clear
