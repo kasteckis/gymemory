@@ -34,25 +34,35 @@ class TrainingController extends Controller
      */
     public function store(StoreTrainingRequest $request)
     {
-        $training = new Training();
-        $training->user_id = auth()->user()->id;
-        $training->name = $request->name;
-        $training->description = $request->description;
-        $training->save();
+        if (auth()->user()) {
+            $training = new Training();
+            $training->user_id = auth()->user()->id;
+            $training->name = $request->name;
+            $training->owner_is_guest = false;
+            $training->save();
 
-        return $training;
+            return $training;
+        } else if (isset(request()->query()['guest-code'])) {
+            $training = new Training();
+            $training->owner_is_guest = true;
+            $training->name = $request->name;
+            $training->guest_code = request()->query()['guest-code'];
+            $training->save();
+
+            return $training;
+        }
+
+        throw new BadRequestHttpException('');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param Training $training
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(Training $training)
     {
-        $training = Training::find($id);
-
         if (auth()->user()) {
             if ($training->user_id === auth()->user()->id) {
                 return $training;
@@ -75,7 +85,21 @@ class TrainingController extends Controller
      */
     public function update(UpdateTrainingRequest $request, Training $training)
     {
-        //
+        if (auth()->user()) {
+            $training->name = $request->name;
+            $training->save();
+
+            return $training;
+        } else if (isset(request()->query()['guest-code'])) {
+            if ($training->guest_code === request()->query()['guest-code']) {
+                $training->name = $request->name;
+                $training->save();
+
+                return $training;
+            }
+        }
+
+        throw new NotFoundHttpException('');
     }
 
     /**
@@ -86,6 +110,19 @@ class TrainingController extends Controller
      */
     public function destroy(Training $training)
     {
-        //
+        if (auth()->user()) {
+            $training->delete();
+
+            return ['success'];
+        } else if (isset(request()->query()['guest-code'])) {
+            if ($training->guest_code === request()->query()['guest-code']) {
+
+                $training->delete();
+
+                return ['success'];
+            }
+        }
+
+        throw new NotFoundHttpException('');
     }
 }

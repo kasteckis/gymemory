@@ -29,9 +29,9 @@ Route::post('register', [UserController::class, 'register']);
 
 Route::get('trainings', [TrainingController::class, 'index']);
 Route::post('training', [TrainingController::class, 'store']);
-Route::get('training/{id}', [TrainingController::class, 'show']);
-Route::put('training/{id}', [TrainingController::class, 'update']);
-Route::delete('training/{id}', [TrainingController::class, 'destroy']);
+Route::get('training/{training}', [TrainingController::class, 'show']);
+Route::put('training/{training}', [TrainingController::class, 'update']);
+Route::delete('training/{training}', [TrainingController::class, 'destroy']);
 
 Route::group([
     'middleware' => 'api',
