@@ -15,17 +15,17 @@ jobs:
 #        run: cd backend && composer install
 #      - name: Run phpstan analysis
 #        run: cd backend && ../tools/phpstan.sh
-#  build_frontend:
-#    runs-on: ubuntu-22.04
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Yarn install
-#        run: cd frontend && yarn install
-#      - name: Run eslint analysis
-#        run: cd frontend && ../tools/eslint.sh
+  build_frontend:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Yarn install
+        run: cd frontend && yarn install
+      - name: Run eslint analysis
+        run: cd frontend && ../tools/eslint.sh
   deploy_main_server:
     runs-on: ubuntu-22.04
-#    needs: [build_backend, build_frontend]
+    needs: [build_frontend]
     steps:
       - uses: actions/checkout@v3
       - name: Deploy to live
