@@ -31,6 +31,11 @@ export default function Home() {
     }
 
     const handleContinueAsGuest = () => {
+        if (localStorage.getItem('guest-code')) {
+            router.push('/trainings');
+            return;
+        }
+
         setDialogOpen(true);
     }
 
