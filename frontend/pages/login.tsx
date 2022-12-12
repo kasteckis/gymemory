@@ -12,9 +12,18 @@ import {
 import React, {useState} from "react";
 import Link from "next/link";
 import LoginDialogTransition from "../components/login/dialogs/LoginDialogTransition";
+import {apiClient} from "../utils/apiClient";
+import {useRouter} from "next/router";
+
+interface CreateGuestAccountResponse {
+    uuid: string;
+}
 
 export default function Home() {
+    const router = useRouter();
+
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+    const [disableDialogButtons, setDisableDialogButtons] = useState<boolean>(false);
 
     const handleLogin = async (e: any) => {
         e.preventDefault();
@@ -30,8 +39,12 @@ export default function Home() {
     }
 
     const handleContinueAsGuestConfirmed = async () => {
+        setDisableDialogButtons(true);
+        const response = await apiClient.post<CreateGuestAccountResponse>('/guest');
 
-        // todo create guest acc
+        localStorage.setItem('guest-code', response.data.uuid);
+
+        await router.push('/trainings');
     }
 
     return (
@@ -68,8 +81,8 @@ export default function Home() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button onClick={handleContinueAsGuestConfirmed}>Create Guest Account</Button>
+                    <Button disabled={disableDialogButtons} onClick={handleCloseDialog}>Cancel</Button>
+                    <Button disabled={disableDialogButtons} onClick={handleContinueAsGuestConfirmed}>Create Guest Account</Button>
                 </DialogActions>
             </Dialog>
         </>
