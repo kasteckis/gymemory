@@ -7,16 +7,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from '@mui/icons-material/Add';
 import CreateTrainingDialog from "../components/trainings/dialogs/CreateTrainingDialog";
 import {getParamsWithGuestCode} from "../utils/params";
-
-interface TrainingInterface {
-    id: number,
-    name: string,
-}
+import {TrainingInterface} from "../utils/interfaces/training";
+import EditTrainingDialog from "../components/trainings/dialogs/EditTrainingDialog";
 
 export default function Trainings() {
     const router = useRouter();
     const [trainings, setTrainings] = useState<TrainingInterface[]>([]);
+    const [selectedTraining, setSelectedTraining] = useState<TrainingInterface | undefined>();
     const [createTrainingDialogOpen, setCreateTrainingDialogOpen] = useState<boolean>(false);
+    const [editTrainingDialogOpen, setEditTrainingDialogOpen] = useState<boolean>(false);
 
     const getTrainings = useCallback(async () => {
         const params = getParamsWithGuestCode();
@@ -39,7 +38,8 @@ export default function Trainings() {
     }
 
     const handleEditButton = (training: TrainingInterface) => () => {
-        console.log('edit');
+        setSelectedTraining(training)
+        setEditTrainingDialogOpen(true)
     }
 
     const handleOpenTraining = (training: TrainingInterface) => () => {
@@ -85,6 +85,7 @@ export default function Trainings() {
                 </List>
             </Container>
             <CreateTrainingDialog open={createTrainingDialogOpen} setOpen={setCreateTrainingDialogOpen} getTrainings={getTrainings} />
+            <EditTrainingDialog open={editTrainingDialogOpen} setOpen={setEditTrainingDialogOpen} getTrainings={getTrainings} training={selectedTraining} />
         </>
     )
 }

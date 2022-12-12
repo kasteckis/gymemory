@@ -1,36 +1,41 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
-import React, {Dispatch, SetStateAction, useCallback, useState} from "react";
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {apiClient} from "../../../utils/apiClient";
 import {getParamsWithGuestCode} from "../../../utils/params";
+import {TrainingInterface} from "../../../utils/interfaces/training";
 
 interface CreateTrainingDialogProps {
     open: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>,
     getTrainings: () => Promise<void>,
+    training: TrainingInterface | undefined,
 }
 
-interface CreateTrainingFormInterface {
+interface EditTrainingFormInterface {
+    id: number,
     name: string,
 }
 
-const CreateTrainingDialog = ({open, setOpen, getTrainings}: CreateTrainingDialogProps) => {
-    const defaultFormValue = {name: ''};
-    const [form, setForm] = useState<CreateTrainingFormInterface>(defaultFormValue);
+const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrainingDialogProps) => {
+    if (!training) {
+        return <></>
+    }
+
+    const [form, setForm] = useState<EditTrainingFormInterface>(training);
 
     const handleClose = () => {
         setOpen(false);
     }
 
-    const handleCreateTraining = async () => {
+    const handleEditTraining = async () => {
         const params = getParamsWithGuestCode();
 
         const data = {
             name: form.name,
         }
 
-        await apiClient.post('/training', data, { params });
+        await apiClient.put('/training/' + training.id, data, { params });
         setOpen(false);
-        setForm(defaultFormValue);
         await getTrainings();
     }
 
@@ -43,6 +48,10 @@ const CreateTrainingDialog = ({open, setOpen, getTrainings}: CreateTrainingDialo
         },
         [form, setForm],
     );
+
+    useEffect(() => {
+        setForm(training);
+    }, [training])
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -61,10 +70,10 @@ const CreateTrainingDialog = ({open, setOpen, getTrainings}: CreateTrainingDialo
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleCreateTraining}>Create Training</Button>
+                <Button onClick={handleEditTraining}>Update Training</Button>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default CreateTrainingDialog;
+export default EditTrainingDialog;
