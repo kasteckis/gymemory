@@ -1,5 +1,5 @@
 import {Box, Button, Container, IconButton, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {apiClient} from "../utils/apiClient";
 import {useRouter} from "next/router";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,6 +9,7 @@ import CreateTrainingDialog from "../components/trainings/dialogs/CreateTraining
 import {getParamsWithGuestCode} from "../utils/params";
 import {TrainingInterface} from "../utils/interfaces/training";
 import EditTrainingDialog from "../components/trainings/dialogs/EditTrainingDialog";
+import Head from "next/head";
 
 export default function Trainings() {
     const router = useRouter();
@@ -42,8 +43,8 @@ export default function Trainings() {
         setEditTrainingDialogOpen(true)
     }
 
-    const handleOpenTraining = (training: TrainingInterface) => () => {
-        console.log('open');
+    const handleOpenTraining = (training: TrainingInterface) => async () => {
+        await router.push('/training/' + training.id)
     }
 
     const handleCreateTraining = () => {
@@ -56,6 +57,9 @@ export default function Trainings() {
 
     return (
         <>
+            <Head>
+                <title>GyMemory | Trainings</title>
+            </Head>
             <Container maxWidth="sm">
                 <h1 style={{textAlign: 'center'}}>Trainings</h1>
                 <Box textAlign={'right'}>
