@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -32,6 +33,12 @@ Route::post('training', [TrainingController::class, 'store']);
 Route::get('training/{training}', [TrainingController::class, 'show']);
 Route::put('training/{training}', [TrainingController::class, 'update']);
 Route::delete('training/{training}', [TrainingController::class, 'destroy']);
+
+Route::get('exercises/{training}', [ExerciseController::class, 'index']);
+Route::post('exercise', [ExerciseController::class, 'store']);
+Route::get('exercise/{exercise}', [ExerciseController::class, 'show']);
+Route::put('exercise/{exercise}', [ExerciseController::class, 'update']);
+Route::delete('exercise/{exercise}', [ExerciseController::class, 'destroy']);
 
 Route::group([
     'middleware' => 'api',

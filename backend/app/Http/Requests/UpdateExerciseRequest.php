@@ -13,7 +13,7 @@ class UpdateExerciseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class UpdateExerciseRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|max:255',
+            'count' => 'required|max:255',
         ];
     }
 }
