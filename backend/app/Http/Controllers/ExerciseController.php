@@ -37,7 +37,7 @@ class ExerciseController extends Controller
                 ->get();
         }
 
-        throw new BadRequestHttpException('');
+        return [];
     }
 
     /**
@@ -50,17 +50,7 @@ class ExerciseController extends Controller
     {
         $training = Training::find($request->training_id);
 
-        if (auth()->user()) {
-            if ($training->user_id !== auth()->user()->id) {
-                throw new AuthorizationException('');
-            }
-        } else if (isset(request()->query()['guest-code'])) {
-            if (request()->query()['guest-code'] !== $training->guest_code) {
-                throw new AuthorizationException('');
-            }
-        } else {
-            throw new AuthorizationException('');
-        }
+        $this->isAuthorized($training);
 
         $exercise = new Exercise;
         $exercise->name = $request->name;
@@ -81,17 +71,7 @@ class ExerciseController extends Controller
     {
         $training = Training::find($exercise->training_id);
 
-        if (auth()->user()) {
-            if ($training->user_id !== auth()->user()->id) {
-                throw new AuthorizationException('');
-            }
-        } else if (isset(request()->query()['guest-code'])) {
-            if (request()->query()['guest-code'] !== $training->guest_code) {
-                throw new AuthorizationException('');
-            }
-        } else {
-            throw new AuthorizationException('');
-        }
+        $this->isAuthorized($training);
 
         return $exercise;
     }
@@ -107,17 +87,7 @@ class ExerciseController extends Controller
     {
         $training = Training::find($exercise->training_id);
 
-        if (auth()->user()) {
-            if ($training->user_id !== auth()->user()->id) {
-                throw new AuthorizationException('');
-            }
-        } else if (isset(request()->query()['guest-code'])) {
-            if (request()->query()['guest-code'] !== $training->guest_code) {
-                throw new AuthorizationException('');
-            }
-        } else {
-            throw new AuthorizationException('');
-        }
+        $this->isAuthorized($training);
 
         $exercise->name = $request->name;
         $exercise->count = $request->count;
@@ -136,6 +106,15 @@ class ExerciseController extends Controller
     {
         $training = Training::find($exercise->training_id);
 
+        $this->isAuthorized($training);
+
+        $exercise->delete();
+
+        return ['success'];
+    }
+
+    public function isAuthorized(Training $training): bool
+    {
         if (auth()->user()) {
             if ($training->user_id !== auth()->user()->id) {
                 throw new AuthorizationException('');
@@ -148,8 +127,6 @@ class ExerciseController extends Controller
             throw new AuthorizationException('');
         }
 
-        $exercise->delete();
-
-        return ['success'];
+        return true;
     }
 }

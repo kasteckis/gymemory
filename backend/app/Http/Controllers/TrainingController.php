@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTrainingRequest;
 use App\Http\Requests\UpdateTrainingRequest;
 use App\Models\Training;
+use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -124,5 +125,22 @@ class TrainingController extends Controller
         }
 
         throw new NotFoundHttpException('');
+    }
+
+    public function isAuthorized(Training $training): bool
+    {
+        if (auth()->user()) {
+            if ($training->user_id !== auth()->user()->id) {
+                throw new AuthorizationException('');
+            }
+        } else if (isset(request()->query()['guest-code'])) {
+            if (request()->query()['guest-code'] !== $training->guest_code) {
+                throw new AuthorizationException('');
+            }
+        } else {
+            throw new AuthorizationException('');
+        }
+
+        return true;
     }
 }
