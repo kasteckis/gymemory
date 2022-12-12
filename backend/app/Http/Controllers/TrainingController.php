@@ -24,7 +24,7 @@ class TrainingController extends Controller
             return Training::where('guest_code', request()->query()['guest-code'])->get();
         }
 
-        throw new BadRequestHttpException('');
+        return [];
     }
 
     /**
@@ -64,17 +64,9 @@ class TrainingController extends Controller
      */
     public function show(Training $training)
     {
-        if (auth()->user()) {
-            if ($training->user_id === auth()->user()->id) {
-                return $training;
-            }
-        } else if (isset(request()->query()['guest-code'])) {
-            if ($training->guest_code === request()->query()['guest-code']) {
-                return $training;
-            }
-        }
+        $this->isAuthorized($training);
 
-        throw new NotFoundHttpException('');
+        return $training;
     }
 
     /**
@@ -86,21 +78,12 @@ class TrainingController extends Controller
      */
     public function update(UpdateTrainingRequest $request, Training $training)
     {
-        if (auth()->user()) {
-            $training->name = $request->name;
-            $training->save();
+        $this->isAuthorized($training);
 
-            return $training;
-        } else if (isset(request()->query()['guest-code'])) {
-            if ($training->guest_code === request()->query()['guest-code']) {
-                $training->name = $request->name;
-                $training->save();
+        $training->name = $request->name;
+        $training->save();
 
-                return $training;
-            }
-        }
-
-        throw new NotFoundHttpException('');
+        return $training;
     }
 
     /**
@@ -111,20 +94,11 @@ class TrainingController extends Controller
      */
     public function destroy(Training $training)
     {
-        if (auth()->user()) {
-            $training->delete();
+        $this->isAuthorized($training);
 
-            return ['success'];
-        } else if (isset(request()->query()['guest-code'])) {
-            if ($training->guest_code === request()->query()['guest-code']) {
+        $training->delete();
 
-                $training->delete();
-
-                return ['success'];
-            }
-        }
-
-        throw new NotFoundHttpException('');
+        return ['success'];
     }
 
     public function isAuthorized(Training $training): bool
