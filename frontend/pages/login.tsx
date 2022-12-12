@@ -6,13 +6,12 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, Slide,
+    DialogTitle,
     TextField
 } from "@mui/material";
 import React, {useState} from "react";
 import Link from "next/link";
 import LoginDialogTransition from "../components/login/dialogs/LoginDialogTransition";
-
 
 export default function Home() {
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -31,7 +30,8 @@ export default function Home() {
     }
 
     const handleContinueAsGuestConfirmed = async () => {
-        console.log('continue fr fr')
+
+        // todo create guest acc
     }
 
     return (

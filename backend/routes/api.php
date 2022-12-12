@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -39,6 +40,8 @@ Route::post('exercise', [ExerciseController::class, 'store']);
 Route::get('exercise/{exercise}', [ExerciseController::class, 'show']);
 Route::put('exercise/{exercise}', [ExerciseController::class, 'update']);
 Route::delete('exercise/{exercise}', [ExerciseController::class, 'destroy']);
+
+Route::post('guest', [GuestController::class, 'create']);
 
 Route::group([
     'middleware' => 'api',
