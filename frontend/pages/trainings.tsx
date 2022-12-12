@@ -89,7 +89,12 @@ export default function Trainings() {
                 </List>
             </Container>
             <CreateTrainingDialog open={createTrainingDialogOpen} setOpen={setCreateTrainingDialogOpen} getTrainings={getTrainings} />
-            <EditTrainingDialog open={editTrainingDialogOpen} setOpen={setEditTrainingDialogOpen} getTrainings={getTrainings} training={selectedTraining} />
+            {selectedTraining ? <EditTrainingDialog
+                open={editTrainingDialogOpen}
+                setOpen={setEditTrainingDialogOpen}
+                getTrainings={getTrainings}
+                training={selectedTraining}
+            /> : undefined}
         </>
     )
 }

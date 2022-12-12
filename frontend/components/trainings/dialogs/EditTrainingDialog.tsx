@@ -8,7 +8,7 @@ interface CreateTrainingDialogProps {
     open: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>,
     getTrainings: () => Promise<void>,
-    training: TrainingInterface | undefined,
+    training: TrainingInterface,
 }
 
 interface EditTrainingFormInterface {
@@ -17,10 +17,6 @@ interface EditTrainingFormInterface {
 }
 
 const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrainingDialogProps) => {
-    if (!training) {
-        return <></>
-    }
-
     const [form, setForm] = useState<EditTrainingFormInterface>(training);
 
     const handleClose = () => {
