@@ -1,4 +1,13 @@
-import {Box, Button, Container, IconButton, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText
+} from "@mui/material";
 import React, {useCallback, useEffect, useState} from "react";
 import {apiClient} from "../utils/apiClient";
 import {useRouter} from "next/router";
@@ -14,9 +23,11 @@ import Head from "next/head";
 import DeleteTrainingDialog from "../components/trainings/dialogs/DeleteTrainingDialog";
 import logout from "../utils/logout";
 import EmptyList from "../components/typography/EmptyList";
+import LoadingCircle from "../components/utils/LoadingCircle";
 
 export default function Trainings() {
     const router = useRouter();
+    const [loading, setLoading] = useState<boolean>(true);
     const [trainings, setTrainings] = useState<TrainingInterface[]>([]);
     const [selectedTraining, setSelectedTraining] = useState<TrainingInterface | undefined>();
     const [createTrainingDialogOpen, setCreateTrainingDialogOpen] = useState<boolean>(false);
@@ -34,6 +45,7 @@ export default function Trainings() {
         const trainings = await apiClient.get('/trainings', { params });
 
         setTrainings(trainings.data);
+        setLoading(false);
     }, [setTrainings, router])
 
     const handleDeleteButton = (training: TrainingInterface) => async () => {
@@ -82,44 +94,53 @@ export default function Trainings() {
                         </Button>
                     </Box>
                 </Box>
-                {trainings.length === 0 ?
-                    <EmptyList text={'Empty training list! You should add some!'} />
-                    : undefined
+
+                {loading ?
+                    <LoadingCircle />
+                    :
+                    <>
+                        {trainings.length === 0 ?
+                            <EmptyList text={'Empty training list! You should add some!'}/>
+                            : undefined}
+                        <List>
+                            {trainings.map(training => {
+                                return (
+                                    <ListItem key={training.id} disablePadding secondaryAction={<>
+                                        <IconButton onClick={handleEditButton(training)} edge="end" aria-label="delete">
+                                            <EditIcon/>
+                                        </IconButton>
+                                        <IconButton onClick={handleDeleteButton(training)} edge="end"
+                                                    aria-label="delete">
+                                            <DeleteIcon/>
+                                        </IconButton>
+                                    </>}>
+                                        <ListItemButton onClick={handleOpenTraining(training)}>
+                                            <ListItemText primary={training.name}/>
+                                        </ListItemButton>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </>
                 }
-                <List>
-                    {trainings.map(training => {
-                        return (
-                            <ListItem key={training.id} disablePadding secondaryAction={
-                                <>
-                                    <IconButton onClick={handleEditButton(training)} edge="end" aria-label="delete">
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton onClick={handleDeleteButton(training)} edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </>
-                            }>
-                                <ListItemButton onClick={handleOpenTraining(training)}>
-                                    <ListItemText primary={training.name} />
-                                </ListItemButton>
-                            </ListItem>
-                        )
-                    })}
-                </List>
             </Container>
-            <CreateTrainingDialog open={createTrainingDialogOpen} setOpen={setCreateTrainingDialogOpen} getTrainings={getTrainings} />
-            {selectedTraining ? <EditTrainingDialog
-                open={editTrainingDialogOpen}
-                setOpen={setEditTrainingDialogOpen}
-                getTrainings={getTrainings}
-                training={selectedTraining}
-            /> : undefined}
-            {selectedTraining ? <DeleteTrainingDialog
-                open={deleteTrainingDialogOpen}
-                setOpen={setDeleteTrainingDialogOpen}
-                getTrainings={getTrainings}
-                training={selectedTraining}
-            /> : undefined}
+            <CreateTrainingDialog open={createTrainingDialogOpen} setOpen={setCreateTrainingDialogOpen} getTrainings={getTrainings}/>
+            {selectedTraining ?
+                <EditTrainingDialog
+                    open={editTrainingDialogOpen}
+                    setOpen={setEditTrainingDialogOpen}
+                    getTrainings={getTrainings}
+                    training={selectedTraining}
+                />
+            : undefined}
+            {selectedTraining ?
+                <DeleteTrainingDialog
+                    open={deleteTrainingDialogOpen}
+                    setOpen={setDeleteTrainingDialogOpen}
+                    getTrainings={getTrainings}
+                    training={selectedTraining}
+                />
+            : undefined}
         </>
     )
 }
