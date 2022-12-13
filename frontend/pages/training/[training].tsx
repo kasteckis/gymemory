@@ -122,7 +122,7 @@ export default function Exercises() {
                                         </>
                                     }>
                                         <ListItemButton onClick={handleOpenExercise(exercise)}>
-                                            <ListItemText primary={exercise.name} />
+                                            <ListItemText primary={exercise.name} secondary={exercise.count} />
                                         </ListItemButton>
                                     </ListItem>
                                 )
