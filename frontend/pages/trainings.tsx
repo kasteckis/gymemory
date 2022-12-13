@@ -5,12 +5,14 @@ import {useRouter} from "next/router";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from '@mui/icons-material/Add';
+import LogoutIcon from '@mui/icons-material/Logout';
 import CreateTrainingDialog from "../components/trainings/dialogs/CreateTrainingDialog";
 import {getParamsWithGuestCode} from "../utils/params";
 import {TrainingInterface} from "../utils/interfaces/training";
 import EditTrainingDialog from "../components/trainings/dialogs/EditTrainingDialog";
 import Head from "next/head";
 import DeleteTrainingDialog from "../components/trainings/dialogs/DeleteTrainingDialog";
+import logout from "../utils/logout";
 
 export default function Trainings() {
     const router = useRouter();
@@ -51,6 +53,11 @@ export default function Trainings() {
         setCreateTrainingDialogOpen(true);
     }
 
+    const handleLogout = async () => {
+        logout()
+        await router.push('/login')
+    }
+
     useEffect(() => {
         getTrainings()
     }, [getTrainings])
@@ -62,10 +69,17 @@ export default function Trainings() {
             </Head>
             <Container maxWidth="sm">
                 <h1 style={{textAlign: 'center'}}>Trainings</h1>
-                <Box textAlign={'right'}>
-                    <Button variant="outlined" endIcon={<AddIcon />} onClick={handleCreateTraining}>
-                        Add Training
-                    </Button>
+                <Box sx={{display: 'flex'}}>
+                    <Box textAlign={'left'} sx={{width: '50%'}}>
+                        <Button variant="outlined" startIcon={<LogoutIcon />} onClick={handleLogout}>
+                            Logout
+                        </Button>
+                    </Box>
+                    <Box textAlign={'right'} sx={{width: '50%'}}>
+                        <Button variant="outlined" endIcon={<AddIcon />} onClick={handleCreateTraining}>
+                            Add Training
+                        </Button>
+                    </Box>
                 </Box>
                 <List>
                     {trainings.map(training => {
