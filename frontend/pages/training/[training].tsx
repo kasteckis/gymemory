@@ -1,4 +1,14 @@
-import {Box, Button, Container, IconButton, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Typography
+} from "@mui/material";
 import Head from "next/head";
 import React, {useCallback, useEffect, useState} from "react";
 import {useRouter} from "next/router";
@@ -10,6 +20,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {ExerciseInterface} from "../../utils/interfaces/exercise";
 import CreateExerciseDialog from "../../components/exercises/dialogs/CreateExerciseDialog";
 import EditExerciseDialog from "../../components/exercises/dialogs/EditExerciseDialog";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EmptyList from "../../components/typography/EmptyList";
 
 export default function Exercises() {
     const router = useRouter();
@@ -59,6 +71,10 @@ export default function Exercises() {
         setCreateExerciseDialogOpen(true);
     }
 
+    const handleBackButton = async () => {
+        await router.push('/trainings');
+    }
+
     useEffect(() => {
         getExercises()
     }, [getExercises])
@@ -70,11 +86,22 @@ export default function Exercises() {
             </Head>
             <Container maxWidth="sm">
                 <h1 style={{textAlign: 'center'}}>Exercises</h1>
-                <Box textAlign={'right'}>
-                    <Button variant="outlined" endIcon={<AddIcon />} onClick={handleCreateExercise}>
-                        Add Exercise
-                    </Button>
+                <Box sx={{display: 'flex'}}>
+                    <Box textAlign={'left'} sx={{width: '50%'}}>
+                        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={handleBackButton}>
+                            Back
+                        </Button>
+                    </Box>
+                    <Box textAlign={'right'} sx={{width: '50%'}}>
+                        <Button variant="outlined" endIcon={<AddIcon />} onClick={handleCreateExercise}>
+                            Add Exercise
+                        </Button>
+                    </Box>
                 </Box>
+                {exercises.length === 0 ?
+                    <EmptyList text={'Empty exercise list! You should add some!'} />
+                    : undefined
+                }
                 <List>
                     {exercises.map(exercise => {
                         return (

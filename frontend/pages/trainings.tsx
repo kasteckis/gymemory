@@ -13,6 +13,7 @@ import EditTrainingDialog from "../components/trainings/dialogs/EditTrainingDial
 import Head from "next/head";
 import DeleteTrainingDialog from "../components/trainings/dialogs/DeleteTrainingDialog";
 import logout from "../utils/logout";
+import EmptyList from "../components/typography/EmptyList";
 
 export default function Trainings() {
     const router = useRouter();
@@ -81,6 +82,10 @@ export default function Trainings() {
                         </Button>
                     </Box>
                 </Box>
+                {trainings.length === 0 ?
+                    <EmptyList text={'Empty training list! You should add some!'} />
+                    : undefined
+                }
                 <List>
                     {trainings.map(training => {
                         return (
