@@ -10,6 +10,7 @@ import {getParamsWithGuestCode} from "../utils/params";
 import {TrainingInterface} from "../utils/interfaces/training";
 import EditTrainingDialog from "../components/trainings/dialogs/EditTrainingDialog";
 import Head from "next/head";
+import DeleteTrainingDialog from "../components/trainings/dialogs/DeleteTrainingDialog";
 
 export default function Trainings() {
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function Trainings() {
     const [selectedTraining, setSelectedTraining] = useState<TrainingInterface | undefined>();
     const [createTrainingDialogOpen, setCreateTrainingDialogOpen] = useState<boolean>(false);
     const [editTrainingDialogOpen, setEditTrainingDialogOpen] = useState<boolean>(false);
+    const [deleteTrainingDialogOpen, setDeleteTrainingDialogOpen] = useState<boolean>(false);
 
     const getTrainings = useCallback(async () => {
         const params = getParamsWithGuestCode();
@@ -32,10 +34,8 @@ export default function Trainings() {
     }, [setTrainings, router])
 
     const handleDeleteButton = (training: TrainingInterface) => async () => {
-        const params = getParamsWithGuestCode();
-
-        await apiClient.delete('/training/' + training.id, { params })
-        await getTrainings();
+        setSelectedTraining(training)
+        setDeleteTrainingDialogOpen(true)
     }
 
     const handleEditButton = (training: TrainingInterface) => () => {
@@ -92,6 +92,12 @@ export default function Trainings() {
             {selectedTraining ? <EditTrainingDialog
                 open={editTrainingDialogOpen}
                 setOpen={setEditTrainingDialogOpen}
+                getTrainings={getTrainings}
+                training={selectedTraining}
+            /> : undefined}
+            {selectedTraining ? <DeleteTrainingDialog
+                open={deleteTrainingDialogOpen}
+                setOpen={setDeleteTrainingDialogOpen}
                 getTrainings={getTrainings}
                 training={selectedTraining}
             /> : undefined}

@@ -51,7 +51,7 @@ const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrain
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Create Training</DialogTitle>
+            <DialogTitle>Edit Training</DialogTitle>
             <DialogContent>
                 <TextField
                     value={form.name}
