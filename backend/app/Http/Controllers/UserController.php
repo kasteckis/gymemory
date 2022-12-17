@@ -51,6 +51,7 @@ class UserController extends Controller
 
         return response()->json([
             'access_token' => $token,
+            'username' => $user->name,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'error' => false,

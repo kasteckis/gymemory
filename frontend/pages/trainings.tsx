@@ -36,6 +36,7 @@ export default function Trainings() {
     const [createTrainingDialogOpen, setCreateTrainingDialogOpen] = useState<boolean>(false);
     const [editTrainingDialogOpen, setEditTrainingDialogOpen] = useState<boolean>(false);
     const [deleteTrainingDialogOpen, setDeleteTrainingDialogOpen] = useState<boolean>(false);
+    const [username, setUsername] = useState<string>('');
 
     const getTrainings = useCallback(async () => {
         const params = getParamsWithGuestCode();
@@ -92,7 +93,15 @@ export default function Trainings() {
 
     useEffect(() => {
         getTrainings()
-    }, [getTrainings])
+
+        const username = localStorage.getItem('username');
+
+        if (localStorage.getItem('guest-code')) {
+            setUsername('Guest')
+        } else if (username) {
+            setUsername(username)
+        }
+    }, [getTrainings, setUsername])
 
     return (
         <>
@@ -106,6 +115,7 @@ export default function Trainings() {
                         <Brightness7Icon />
                     </IconButton>
                 </Box>
+                <h3 style={{textAlign: 'center', width: '90%'}}>Sup, {username} !</h3>
                 <Box sx={{display: 'flex'}}>
                     <Box textAlign={'left'} sx={{width: '50%'}}>
                         <Button variant="outlined" startIcon={<LogoutIcon />} onClick={handleLogout}>

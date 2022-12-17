@@ -55,7 +55,7 @@ export default function Exercises() {
     const handleDeleteButton = (exercise: ExerciseInterface) => async () => {
         const params = getParamsWithGuestCode();
 
-        await apiClient.delete('/exercise/' + exercise.id, { params });
+        await apiClient.delete('/exercise/' + exercise.id, params);
         await getExercises();
     }
 

@@ -49,6 +49,7 @@ export default function Home() {
                 const response = await apiClient.post('/auth/login', values);
 
                 localStorage.setItem('jwt', response.data.access_token)
+                localStorage.setItem('username', response.data.username)
                 await router.push('/trainings')
             } catch (e: any) {
                 alert('Login failed!')

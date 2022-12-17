@@ -42,6 +42,7 @@ export default function Register() {
                 alert(response.data.msg)
             } else {
                 localStorage.setItem('jwt', response.data.access_token)
+                localStorage.setItem('username', response.data.username)
                 await router.push('/trainings')
             }
         },
