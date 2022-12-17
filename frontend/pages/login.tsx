@@ -94,6 +94,7 @@ export default function Home() {
                         id="email"
                         name="email"
                         label="Email"
+                        type='email'
                         value={formik.values.email}
                         onChange={formik.handleChange}
                         error={formik.touched.email && Boolean(formik.errors.email)}
