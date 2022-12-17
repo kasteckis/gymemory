@@ -50,7 +50,6 @@ const CreateTrainingDialog = ({open, setOpen, getTrainings}: CreateTrainingDialo
             <DialogContent>
                 <TextField
                     value={form.name}
-                    autoFocus
                     margin="dense"
                     name="name"
                     label="Training Name"

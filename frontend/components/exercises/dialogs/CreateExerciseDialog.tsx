@@ -54,7 +54,6 @@ const CreateExerciseDialog = ({open, setOpen, getExercises, trainingId}: CreateE
             <DialogContent>
                 <TextField
                     value={form.name}
-                    autoFocus
                     margin="dense"
                     name="name"
                     label="Exercise Name"
@@ -64,7 +63,6 @@ const CreateExerciseDialog = ({open, setOpen, getExercises, trainingId}: CreateE
                 />
                 <TextField
                     value={form.count}
-                    autoFocus
                     margin="dense"
                     name="count"
                     label="Exercise Count"
