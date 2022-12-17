@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
             localStorage.setItem('theme', defaultTheme)
             setTheme(defaultTheme)
         }
-    })
+    }, [setTheme])
 
     return <>
         <Head>
