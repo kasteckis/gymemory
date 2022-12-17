@@ -15,6 +15,8 @@ import LoginDialogTransition from "../components/login/dialogs/LoginDialogTransi
 import {apiClient} from "../utils/apiClient";
 import {useRouter} from "next/router";
 import styles from '../components/register/register.module.css'
+import * as yup from "yup";
+import {useFormik} from "formik";
 
 interface CreateGuestAccountResponse {
     uuid: string;
@@ -26,10 +28,33 @@ export default function Home() {
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [disableDialogButtons, setDisableDialogButtons] = useState<boolean>(false);
 
-    const handleLogin = async (e: any) => {
-        e.preventDefault();
-        alert('Login is not yet implemented! Come back later!'); // Todo implement actual login
-    }
+    const validationSchema = yup.object({
+        email: yup
+            .string()
+            .email('Enter a valid email')
+            .required('Email is required'),
+        password: yup
+            .string()
+            .required('Password is required'),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            try {
+                const response = await apiClient.post('/auth/login', values);
+
+                localStorage.setItem('jwt', response.data.access_token)
+                await router.push('/trainings')
+            } catch (e: any) {
+                alert('Login failed!')
+            }
+        },
+    });
 
     const handleContinueAsGuest = () => {
         if (localStorage.getItem('guest-code')) {
@@ -61,11 +86,32 @@ export default function Home() {
             </Head>
             <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Login</h1>
-                <form onSubmit={handleLogin}>
-                    <TextField fullWidth label="Email" variant="standard" />
-                    <TextField fullWidth label="Password" variant="standard" type={'password'} />
+                <form onSubmit={formik.handleSubmit}>
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        id="email"
+                        name="email"
+                        label="Email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                    />
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        type="password"
+                        id="password"
+                        name="password"
+                        label="Password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
+                    />
 
-                    <Button className={styles.buttonLogin} type={'submit'} onClick={handleLogin}  variant="contained">Login</Button>
+                    <Button className={styles.buttonLogin} type={'submit'} variant="contained">Login</Button>
                     <Button className={styles.buttonContinueGuest} onClick={handleContinueAsGuest} variant="contained">
                         Login as guest
                     </Button>
