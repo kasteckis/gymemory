@@ -32,7 +32,7 @@ const CreateExerciseDialog = ({open, setOpen, getExercises, trainingId}: CreateE
             training_id: trainingId,
         }
 
-        await apiClient.post('/exercise', data, { params });
+        await apiClient.post('/exercise', data, params);
         setOpen(false);
         setForm(defaultFormValue);
         await getExercises();

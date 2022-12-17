@@ -19,7 +19,7 @@ const DeleteTrainingDialog = ({open, setOpen, getTrainings, training}: DeleteTra
     const handleDeleteTraining = async () => {
         const params = getParamsWithGuestCode();
 
-        await apiClient.delete('/training/' + training.id, { params });
+        await apiClient.delete('/training/' + training.id, params);
         setOpen(false);
         await getTrainings();
     }

@@ -28,7 +28,7 @@ const CreateTrainingDialog = ({open, setOpen, getTrainings}: CreateTrainingDialo
             name: form.name,
         }
 
-        await apiClient.post('/training', data, { params });
+        await apiClient.post('/training', data, params);
         setOpen(false);
         setForm(defaultFormValue);
         await getTrainings();

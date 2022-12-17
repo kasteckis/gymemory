@@ -40,12 +40,12 @@ export default function Trainings() {
     const getTrainings = useCallback(async () => {
         const params = getParamsWithGuestCode();
 
-        if (!params['guest-code']) {
+        if (!params.params["guest-code"] && !params.headers.Authorization) {
             await router.push('/login');
             return;
         }
 
-        const trainings = await apiClient.get('/trainings', { params });
+        const trainings = await apiClient.get('/trainings', params);
 
         setTrainings(trainings.data);
         setLoading(false);

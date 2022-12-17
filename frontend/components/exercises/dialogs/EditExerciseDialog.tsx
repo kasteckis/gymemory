@@ -32,7 +32,7 @@ const EditExerciseDialog = ({open, setOpen, getExercises, exercise}: CreateExerc
             count: form.count,
         }
 
-        await apiClient.put('/exercise/' + exercise.id, data, { params });
+        await apiClient.put('/exercise/' + exercise.id, data, params);
         setOpen(false);
         await getExercises();
     }

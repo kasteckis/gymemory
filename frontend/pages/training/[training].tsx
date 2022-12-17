@@ -41,12 +41,12 @@ export default function Exercises() {
 
         const params = getParamsWithGuestCode();
 
-        if (!params['guest-code']) {
+        if (!params.params["guest-code"] && !params.headers.Authorization) {
             await router.push('/login');
             return;
         }
 
-        const exercisesResponse = await apiClient.get('/exercises/' + training, { params });
+        const exercisesResponse = await apiClient.get('/exercises/' + training, params );
 
         setExercises(exercisesResponse.data);
         setLoading(false);

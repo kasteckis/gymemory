@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\CreateTrainingsService;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,13 +15,19 @@ class UserController extends Controller
         $content = request(['email', 'password', 'name']);
 
         try {
-            User::create([
+            $user = User::create([
                 'name' => $content['name'],
                 'email' => $content['email'],
                 'password' => Hash::make($content['password']),
                 'register_ip' => $request->ip(),
                 'last_login_ip' => 'never logged in',
             ]);
+
+            [$push, $pull, $legs] = CreateTrainingsService::createTrainingsForRealUser($user->id);
+
+            CreateTrainingsService::createPushExercises($push);
+            CreateTrainingsService::createPullExercises($pull);
+            CreateTrainingsService::createLegsExercises($legs);
         } catch (\Exception $exception) {
 
             if (str_contains($exception->getMessage(), 'users_email_unique')) {

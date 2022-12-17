@@ -30,7 +30,7 @@ const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrain
             name: form.name,
         }
 
-        await apiClient.put('/training/' + training.id, data, { params });
+        await apiClient.put('/training/' + training.id, data, params);
         setOpen(false);
         await getTrainings();
     }
