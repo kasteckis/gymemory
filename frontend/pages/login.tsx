@@ -58,7 +58,7 @@ export default function Home() {
                 <title>GyMemory | Login</title>
                 <meta name="description" content="Sign in to access all of the features on gymemory" />
             </Head>
-            <Container maxWidth="sm">
+            <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Login</h1>
                 <form onSubmit={handleLogin}>
                     <TextField fullWidth label="Email" variant="standard" />

@@ -86,7 +86,7 @@ export default function Exercises() {
             <Head>
                 <title>GyMemory | Exercises</title>
             </Head>
-            <Container maxWidth="sm">
+            <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Exercises</h1>
                 <Box sx={{display: 'flex'}}>
                     <Box textAlign={'left'} sx={{width: '50%'}}>

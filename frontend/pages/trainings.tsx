@@ -24,6 +24,8 @@ import DeleteTrainingDialog from "../components/trainings/dialogs/DeleteTraining
 import logout from "../utils/logout";
 import EmptyList from "../components/typography/EmptyList";
 import LoadingCircle from "../components/utils/LoadingCircle";
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import {ThemeType} from "../utils/interfaces/ThemeType";
 
 export default function Trainings() {
     const router = useRouter();
@@ -71,6 +73,18 @@ export default function Trainings() {
         await router.push('/login')
     }
 
+    const handleThemeChange = () => {
+        const currentTheme = localStorage.getItem('theme') as ThemeType
+
+        if (currentTheme) {
+            localStorage.setItem('theme', currentTheme === 'dark' ? 'light' : 'dark')
+        } else {
+            localStorage.setItem('theme', 'dark')
+        }
+
+        location.reload();
+    }
+
     useEffect(() => {
         getTrainings()
     }, [getTrainings])
@@ -80,8 +94,13 @@ export default function Trainings() {
             <Head>
                 <title>GyMemory | Trainings</title>
             </Head>
-            <Container maxWidth="sm">
-                <h1 style={{textAlign: 'center'}}>Trainings</h1>
+            <Container maxWidth="md">
+                <Box textAlign={'right'} sx={{display: 'flex'}}>
+                    <h1 style={{textAlign: 'center', width: '90%'}}>Trainings</h1>
+                    <IconButton sx={{width: '10%'}} onClick={handleThemeChange} disableRipple={true}>
+                        <Brightness7Icon />
+                    </IconButton>
+                </Box>
                 <Box sx={{display: 'flex'}}>
                     <Box textAlign={'left'} sx={{width: '50%'}}>
                         <Button variant="outlined" startIcon={<LogoutIcon />} onClick={handleLogout}>

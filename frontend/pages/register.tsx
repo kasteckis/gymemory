@@ -21,7 +21,7 @@ export default function Home() {
                 <title>GyMemory | Register</title>
                 <meta name="description" content="Sign up to access all of the features on gymemory" />
             </Head>
-            <Container maxWidth="sm">
+            <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Register</h1>
                 <form onSubmit={handleSubmit}>
                     <TextField fullWidth label="Name" variant="standard" />
