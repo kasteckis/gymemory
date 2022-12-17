@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTrainingRequest;
 use App\Http\Requests\UpdateTrainingRequest;
+use App\Models\Exercise;
 use App\Models\Training;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -19,9 +20,33 @@ class TrainingController extends Controller
     public function index()
     {
         if (auth()->user()) {
-            return Training::where('user_id', auth()->user()->id)->get();
+            $trainings = Training::where('user_id', auth()->user()->id)->get();
+
+            foreach ($trainings as $training) {
+                $exercisesCount = Exercise::
+                join('trainings', 'exercises.training_id', '=', 'trainings.id')
+                    ->where('training_id', $training->id)
+                    ->where('trainings.user_id', auth()->user()->id)
+                    ->count();
+
+                $training['exercises'] = $exercisesCount;
+            }
+
+            return $trainings;
         } else if (isset(request()->query()['guest-code'])) {
-            return Training::where('guest_code', request()->query()['guest-code'])->get();
+            $trainings = Training::where('guest_code', request()->query()['guest-code'])->get();
+
+            foreach ($trainings as $training) {
+                $exercisesCount = Exercise::
+                    join('trainings', 'exercises.training_id', '=', 'trainings.id')
+                    ->where('training_id', $training->id)
+                    ->where('trainings.guest_code', request()->query()['guest-code'])
+                    ->count();
+
+                $training['exercises'] = $exercisesCount;
+            }
+
+            return $trainings;
         }
 
         return [];

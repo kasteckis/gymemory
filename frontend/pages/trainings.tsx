@@ -26,6 +26,7 @@ import EmptyList from "../components/typography/EmptyList";
 import LoadingCircle from "../components/utils/LoadingCircle";
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {ThemeType} from "../utils/interfaces/ThemeType";
+import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 
 export default function Trainings() {
     const router = useRouter();
@@ -85,6 +86,10 @@ export default function Trainings() {
         location.reload();
     }
 
+    const handleStartExercise = (training: TrainingInterface) => async () => {
+        alert('todo show do you want to start workout?');
+    }
+
     useEffect(() => {
         getTrainings()
     }, [getTrainings])
@@ -125,12 +130,14 @@ export default function Trainings() {
                             {trainings.map(training => {
                                 return (
                                     <ListItem key={training.id} disablePadding secondaryAction={<>
-                                        <IconButton onClick={handleEditButton(training)} edge="end" aria-label="delete">
+                                        <IconButton onClick={handleEditButton(training)} edge="end">
                                             <EditIcon/>
                                         </IconButton>
-                                        <IconButton onClick={handleDeleteButton(training)} edge="end"
-                                                    aria-label="delete">
+                                        <IconButton onClick={handleDeleteButton(training)} edge="end" aria-label="delete">
                                             <DeleteIcon/>
+                                        </IconButton>
+                                        <IconButton onClick={handleStartExercise(training)} disabled={training.exercises === 0} edge="end">
+                                            <PlayCircleFilledIcon />
                                         </IconButton>
                                     </>}>
                                         <ListItemButton onClick={handleOpenTraining(training)}>
