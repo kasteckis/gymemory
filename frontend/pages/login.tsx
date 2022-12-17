@@ -14,6 +14,7 @@ import Link from "next/link";
 import LoginDialogTransition from "../components/login/dialogs/LoginDialogTransition";
 import {apiClient} from "../utils/apiClient";
 import {useRouter} from "next/router";
+import styles from '../components/register/register.module.css'
 
 interface CreateGuestAccountResponse {
     uuid: string;
@@ -64,10 +65,15 @@ export default function Home() {
                     <TextField fullWidth label="Email" variant="standard" />
                     <TextField fullWidth label="Password" variant="standard" type={'password'} />
 
-                    <Button type={'submit'} onClick={handleLogin} style={{marginTop: '10px'}} variant="contained">Login</Button>
-                    <Button onClick={handleContinueAsGuest} style={{marginTop: '10px', marginLeft: '10px'}} variant="contained">
+                    <Button className={styles.buttonLogin} type={'submit'} onClick={handleLogin}  variant="contained">Login</Button>
+                    <Button className={styles.buttonContinueGuest} onClick={handleContinueAsGuest} variant="contained">
                         Login as guest
                     </Button>
+                    <Link href="/register" style={{textDecoration: 'none'}}>
+                        <Button className={styles.buttonRegister} variant="contained">
+                            Register
+                        </Button>
+                    </Link>
                 </form>
             </Container>
 

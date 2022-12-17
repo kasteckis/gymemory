@@ -13,13 +13,28 @@ class UserController extends Controller
     {
         $content = request(['email', 'password', 'name']);
 
-        User::create([
-            'name' => $content['name'],
-            'email' => $content['email'],
-            'password' => Hash::make($content['password']),
-            'register_ip' => $request->ip(),
-            'last_login_ip' => 'never logged in',
-        ]);
+        try {
+            User::create([
+                'name' => $content['name'],
+                'email' => $content['email'],
+                'password' => Hash::make($content['password']),
+                'register_ip' => $request->ip(),
+                'last_login_ip' => 'never logged in',
+            ]);
+        } catch (\Exception $exception) {
+
+            if (str_contains($exception->getMessage(), 'users_email_unique')) {
+                return response()->json([
+                    'error' => true,
+                    'msg' => 'This email is in use!',
+                ]);
+            }
+
+            return response()->json([
+                'error' => true,
+                'msg' => '',
+            ]);
+        }
 
         $credentials = request(['email', 'password']);
 
@@ -30,7 +45,8 @@ class UserController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'error' => false,
         ]);
     }
 }
