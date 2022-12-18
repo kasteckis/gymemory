@@ -1,15 +1,15 @@
 .buttonLogin {
-    margin-top: 10px;
+    margin-top: 10px !important;
 }
 
 .buttonContinueGuest {
-    margin-top: 10px;
-    margin-left: 10px;
+    margin-top: 10px !important;
+    margin-left: 10px !important;
 }
 
 .buttonRegister {
-    margin-top: 10px;
-    margin-left: 10px;
+    margin-top: 10px !important;
+    margin-left: 10px !important;
 }
 
 @media only screen and (max-width: 768px) {
@@ -18,10 +18,10 @@
     }
 
     .buttonContinueGuest {
-        margin-left: 1px;
+        margin-left: 1px !important;
     }
 
     .buttonRegister {
-        margin-left: 1px;
+        margin-left: 1px !important;
     }
 }
