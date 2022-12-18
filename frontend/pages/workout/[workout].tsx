@@ -4,22 +4,40 @@ import {
     Container, TextField,
 } from "@mui/material";
 import Head from "next/head";
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as yup from 'yup';
 import {useFormik} from "formik";
-import {apiClient} from "../../utils/apiClient";
+import {ExerciseInterface} from "../../utils/interfaces/exercise";
 import {getParamsWithGuestCode} from "../../utils/params";
+import {apiClient} from "../../utils/apiClient";
 
 export default function Exercises() {
     const router = useRouter();
-    let { training } = router.query;
-    training = training ? training.toString() : undefined;
+    let { workout } = router.query;
+    workout = workout ? workout.toString() : undefined;
+    const [exercises, setExercises] = useState<ExerciseInterface[]>([]);
 
     const handleBackButton = async () => {
         await router.push('/trainings');
     }
+
+    const getExercises = useCallback(async () => {
+        if (!workout) {
+            return;
+        }
+
+        const params = getParamsWithGuestCode();
+
+        const exercisesResponse = await apiClient.get('/exercises-by-workout/' + workout, params);
+
+        setExercises(exercisesResponse.data)
+    }, [setExercises, router, workout])
+
+    useEffect(() => {
+        getExercises()
+    }, [])
 
     const validationSchema = yup.object({
         locker_number: yup
@@ -34,23 +52,9 @@ export default function Exercises() {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
 
-            const fullValues = {
-                training_id: training,
-                start_date_time: new Date(),
-                ...values,
-            }
-
-            const params = getParamsWithGuestCode();
-
-            const response = await apiClient.post('/workout', fullValues, params);
-
-            console.log(response.data)
+            console.log('aaa')
         },
     });
-
-    useEffect(() => {
-
-    }, [])
 
     return (
         <>

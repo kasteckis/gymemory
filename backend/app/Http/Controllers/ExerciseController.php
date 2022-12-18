@@ -8,7 +8,6 @@ use App\Models\Exercise;
 use App\Models\Training;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ExerciseController extends Controller
 {
@@ -35,6 +34,31 @@ class ExerciseController extends Controller
                 ->where('trainings.guest_code', '=', request()->query()['guest-code'])
                 ->where('trainings.id', '=', $training->id)
                 ->get();
+        }
+
+        return [];
+    }
+
+    public function exercisesByWorkout(string $workout)
+    {
+        if (auth()->user()) {
+            return Exercise::
+                select(['exercises.id', 'exercises.name', 'exercises.count', 'exercises.created_at', 'exercises.updated_at'])
+                ->join('trainings', 'exercises.training_id', '=', 'trainings.id')
+                ->join('workouts', 'workouts.training_id', '=', 'trainings.id')
+                ->where('trainings.user_id', '=', auth()->user()->id)
+                ->where('workouts.id', '=', $workout)
+                ->get()
+            ;
+        } else if (isset(request()->query()['guest-code'])) {
+            return Exercise::
+                select(['exercises.id', 'exercises.name', 'exercises.count', 'exercises.created_at', 'exercises.updated_at'])
+                ->join('trainings', 'exercises.training_id', '=', 'trainings.id')
+                ->join('workouts', 'workouts.training_id', '=', 'trainings.id')
+                ->where('trainings.guest_code', '=', request()->query()['guest-code'])
+                ->where('workouts.id', '=', $workout)
+                ->get()
+            ;
         }
 
         return [];

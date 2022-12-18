@@ -38,6 +38,7 @@ Route::put('training/{training}', [TrainingController::class, 'update']);
 Route::delete('training/{training}', [TrainingController::class, 'destroy']);
 
 Route::get('exercises/{training}', [ExerciseController::class, 'index']);
+Route::get('exercises-by-workout/{workout}', [ExerciseController::class, 'exercisesByWorkout']);
 Route::post('exercise', [ExerciseController::class, 'store']);
 Route::get('exercise/{exercise}', [ExerciseController::class, 'show']);
 Route::put('exercise/{exercise}', [ExerciseController::class, 'update']);
