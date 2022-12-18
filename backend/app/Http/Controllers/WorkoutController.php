@@ -17,7 +17,15 @@ class WorkoutController extends Controller
      */
     public function index()
     {
-        //
+        if (auth()->user()) {
+            $workout = Workout::where('user_id', auth()->user()->id)->where('end_date_time', null)->first();
+
+            return $workout;
+        } else if (isset(request()->query()['guest-code'])) {
+            $workout = Workout::where('guest_code', request()->query()['guest-code'])->where('end_date_time', null)->first();
+
+            return $workout;
+        }
     }
 
     /**

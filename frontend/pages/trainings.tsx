@@ -28,6 +28,8 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {ThemeType} from "../utils/interfaces/ThemeType";
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import StartWorkoutDialog from "../components/trainings/dialogs/StartWorkoutDialog";
+import {WorkoutInterface} from "../utils/interfaces/WorkoutInterface";
+import Link from "next/link";
 
 export default function Trainings() {
     const router = useRouter();
@@ -39,6 +41,7 @@ export default function Trainings() {
     const [deleteTrainingDialogOpen, setDeleteTrainingDialogOpen] = useState<boolean>(false);
     const [startWorkoutDialogOpen, setStartWorkoutDialogOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
+    const [currentWorkout, setCurrentWorkout] = useState<WorkoutInterface|null>(null);
 
     const getTrainings = useCallback(async () => {
         const params = getParamsWithGuestCode();
@@ -53,6 +56,16 @@ export default function Trainings() {
         setTrainings(trainings.data);
         setLoading(false);
     }, [setTrainings, router])
+
+    const getCurrentWorkout = useCallback(async () => {
+        const params = getParamsWithGuestCode()
+
+        const response = await apiClient.get('/workout', params)
+
+        if (response.data) {
+            setCurrentWorkout(response.data)
+        }
+    }, [])
 
     const handleDeleteButton = (training: TrainingInterface) => async () => {
         setSelectedTraining(training)
@@ -96,6 +109,7 @@ export default function Trainings() {
 
     useEffect(() => {
         getTrainings()
+        getCurrentWorkout()
 
         const username = localStorage.getItem('username');
 
@@ -119,6 +133,12 @@ export default function Trainings() {
                     </IconButton>
                 </Box>
                 <h3 style={{textAlign: 'center', width: '90%'}}>Sup, {username} !</h3>
+                {currentWorkout ?
+                    <h3 style={{textAlign: 'center'}}>
+                        You have active workout! <Link href={`/workout/${currentWorkout.id}`}>Click here to continue!</Link>
+                    </h3>
+                    : undefined
+                }
                 <Box sx={{display: 'flex'}}>
                     <Box textAlign={'left'} sx={{width: '50%'}}>
                         <Button variant="outlined" startIcon={<LogoutIcon />} onClick={handleLogout}>
