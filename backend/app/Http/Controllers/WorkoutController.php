@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateWorkoutRequest;
 use App\Models\Exercise;
 use App\Models\Training;
 use App\Models\Workout;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class WorkoutController extends Controller
 {
@@ -26,16 +27,15 @@ class WorkoutController extends Controller
 
             return $workout;
         }
+
+        throw new AuthorizationException('');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show(Workout $workout)
     {
-        //
+        $this->isAuthorized($workout);
+
+        return $workout;
     }
 
     /**
@@ -124,5 +124,22 @@ class WorkoutController extends Controller
     public function destroy(Workout $workout)
     {
         //
+    }
+
+    public function isAuthorized(Workout $workout): bool
+    {
+        if (auth()->user()) {
+            if ($workout->user_id !== auth()->user()->id) {
+                throw new AuthorizationException('');
+            }
+        } else if (isset(request()->query()['guest-code'])) {
+            if (request()->query()['guest-code'] !== $workout->guest_code) {
+                throw new AuthorizationException('');
+            }
+        } else {
+            throw new AuthorizationException('');
+        }
+
+        return true;
     }
 }
