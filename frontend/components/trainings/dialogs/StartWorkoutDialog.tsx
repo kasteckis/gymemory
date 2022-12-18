@@ -3,6 +3,7 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import {TrainingInterface} from "../../../utils/interfaces/training";
 import {getParamsWithGuestCode} from "../../../utils/params";
 import {apiClient} from "../../../utils/apiClient";
+import {useRouter} from "next/router";
 
 interface StartWorkoutDialogProps {
     open: boolean,
@@ -15,8 +16,10 @@ const StartWorkoutDialog = ({open, setOpen, training}: StartWorkoutDialogProps) 
         setOpen(false);
     }
 
+    const router = useRouter();
+
     const handleStartWorkout = async () => {
-        alert('todo')
+        await router.push('/training/' + training.id + '/start')
     }
 
     return (

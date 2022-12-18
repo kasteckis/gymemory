@@ -41,25 +41,33 @@ class WorkoutController extends Controller
         // Todo check if there is an active workout, dont allow to create another one
 
         if (auth()->user()) {
-            // todo check if training id belongs to the same user
+            if (!Training::where('id', $request->training_id)->where('user_id', auth()->user()->id)->exists()) {
+                return response()->json(['error' => 'This training does not belong to this user'], 403);
+            }
 
             $workout = Workout::create([
                 'user_id' => auth()->user()->id,
                 'owner_is_guest' => false,
-                'start_date_time' => $request->start_date_time,
+                'start_date_time' => new \DateTime($request->start_date_time),
                 'locker_number' => $request->locker_number,
                 'training_id' => $request->training_id,
             ]);
 
             return $workout;
         } else if (isset(request()->query()['guest-code'])) {
+            if (!Training::where('id', $request->training_id)->where('guest_code', request()->query()['guest-code'])->exists()) {
+                return response()->json(['error' => 'This training does not belong to this user'], 403);
+            }
+
             $workout = Workout::create([
                 'guest_code' => request()->query()['guest-code'],
                 'owner_is_guest' => true,
-                'start_date_time' => $request->start_date_time,
+                'start_date_time' => new \DateTime($request->start_date_time),
                 'locker_number' => $request->locker_number,
                 'training_id' => $request->training_id,
             ]);
+
+            return $workout;
         }
     }
 

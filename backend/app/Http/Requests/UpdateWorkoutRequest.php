@@ -24,7 +24,6 @@ class UpdateWorkoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'owner_is_guest' => 'required|boolean',
             'start_date_time' => 'required',
             'training_id' => 'required',
             'locker_number' => 'required|max:255'
