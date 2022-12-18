@@ -127,12 +127,13 @@ export default function Trainings() {
             </Head>
             <Container maxWidth="md">
                 <Box textAlign={'right'} sx={{display: 'flex'}}>
-                    <h1 style={{textAlign: 'center', width: '90%'}}>Trainings</h1>
+                    <div style={{width: '10%'}}></div>
+                    <h1 style={{textAlign: 'center', width: '80%'}}>Trainings</h1>
                     <IconButton sx={{width: '10%'}} onClick={handleThemeChange} disableRipple={true}>
                         <Brightness7Icon />
                     </IconButton>
                 </Box>
-                <h3 style={{textAlign: 'center', width: '90%'}}>Sup, {username} !</h3>
+                <h3 style={{textAlign: 'center'}}>Sup, {username} !</h3>
                 {currentWorkout ?
                     <h3 style={{textAlign: 'center'}}>
                         You have active workout! <Link href={`/workout/${currentWorkout.id}`}>Click here to continue!</Link>
