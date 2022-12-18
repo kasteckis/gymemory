@@ -1,7 +1,7 @@
 import {
     Box,
     Button,
-    Container, TextField,
+    Container, IconButton, List, ListItem, ListItemButton, ListItemText, TextField,
 } from "@mui/material";
 import Head from "next/head";
 import React, {useCallback, useEffect, useState} from "react";
@@ -12,6 +12,9 @@ import {useFormik} from "formik";
 import {ExerciseInterface} from "../../utils/interfaces/exercise";
 import {getParamsWithGuestCode} from "../../utils/params";
 import {apiClient} from "../../utils/apiClient";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import DoneIcon from '@mui/icons-material/Done';
 
 export default function Exercises() {
     const router = useRouter();
@@ -39,22 +42,19 @@ export default function Exercises() {
         getExercises()
     }, [])
 
-    const validationSchema = yup.object({
-        locker_number: yup
-            .string()
-            .required('Locker number is required'),
-    });
+    const handleFinishWorkout = async () => {
+        const params = getParamsWithGuestCode()
 
-    const formik = useFormik({
-        initialValues: {
-            locker_number: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: async (values) => {
+        const values = {
+            end_date_time: new Date(),
+        }
 
-            console.log('aaa')
-        },
-    });
+        const response = await apiClient.put('/workout/' + workout, values, params)
+
+        if (response.data) {
+            await router.push(`/workout/${workout}/finish`)
+        }
+    }
 
     return (
         <>
@@ -66,10 +66,39 @@ export default function Exercises() {
                 <Box sx={{display: 'flex'}}>
                     <Box textAlign={'left'} sx={{width: '50%'}}>
                         <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={handleBackButton}>
-                            Back to trainings
+                            Back
+                        </Button>
+                    </Box>
+
+                    <Box textAlign={'right'} sx={{width: '50%'}}>
+                        <Button variant="outlined" endIcon={<DoneIcon />} onClick={handleFinishWorkout}>
+                            Complete
                         </Button>
                     </Box>
                 </Box>
+                <List>
+                    {exercises.map(exercise => {
+                        return (
+                            <ListItem key={exercise.id} disablePadding secondaryAction={
+                                <>
+                                    {exercise.completed ?
+                                        <IconButton edge="end">
+                                            <CheckBoxIcon />
+                                        </IconButton>
+                                        :
+                                        <IconButton edge="end">
+                                            <CheckBoxOutlineBlankIcon />
+                                        </IconButton>
+                                    }
+                                </>
+                            }>
+                                <ListItemButton>
+                                    <ListItemText primary={exercise.name} secondary={exercise.count} />
+                                </ListItemButton>
+                            </ListItem>
+                        )
+                    })}
+                </List>
             </Container>
         </>
     )

@@ -94,7 +94,23 @@ class WorkoutController extends Controller
      */
     public function update(UpdateWorkoutRequest $request, Workout $workout)
     {
-        //
+        if (auth()->user()) {
+            if ($workout->user_id == auth()->user()->id) {
+                $workout->end_date_time = new \DateTime($request->end_date_time);
+                $workout->save();
+
+                return $workout;
+            }
+        } else if (isset(request()->query()['guest-code'])) {
+            if ($workout->guest_code === request()->query()['guest-code']) {
+                $workout->end_date_time = new \DateTime($request->end_date_time);
+                $workout->save();
+
+                return $workout;
+            }
+        }
+
+        return response()->json(['error' => 'Forbidden'], 403);
     }
 
     /**

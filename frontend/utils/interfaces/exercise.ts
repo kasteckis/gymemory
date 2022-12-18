@@ -3,4 +3,5 @@ export interface ExerciseInterface {
     name: string,
     count: string,
     training_id: number,
+    completed: boolean,
 }
