@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompleteExerciseRequest;
 use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
@@ -131,6 +132,15 @@ class ExerciseController extends Controller
 
         $exercise->name = $request->name;
         $exercise->count = $request->count;
+        $exercise->save();
+
+        return $exercise;
+    }
+
+    public function completeExercise(CompleteExerciseRequest $request, Exercise $exercise)
+    {
+        $exercise->completed = $request->completed;
+
         $exercise->save();
 
         return $exercise;

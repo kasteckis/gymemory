@@ -1,14 +1,12 @@
 import {
     Box,
     Button,
-    Container, IconButton, List, ListItem, ListItemButton, ListItemText, TextField,
+    Container, IconButton, List, ListItem, ListItemButton, ListItemText,
 } from "@mui/material";
 import Head from "next/head";
 import React, {useCallback, useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import * as yup from 'yup';
-import {useFormik} from "formik";
 import {ExerciseInterface} from "../../utils/interfaces/exercise";
 import {getParamsWithGuestCode} from "../../utils/params";
 import {apiClient} from "../../utils/apiClient";
@@ -56,6 +54,34 @@ export default function Exercises() {
         }
     }
 
+    const finishExercise = (exercise: ExerciseInterface) => async () => {
+        const params = getParamsWithGuestCode()
+
+        const values = {
+            completed: true,
+        }
+
+        const response = await apiClient.put(`/exercise/${exercise.id}/complete`, values, params)
+
+        if (response.data) {
+            getExercises()
+        }
+    }
+
+    const startExerciseAgain = (exercise: ExerciseInterface) => async () => {
+        const params = getParamsWithGuestCode()
+
+        const values = {
+            completed: false,
+        }
+
+        const response = await apiClient.put(`/exercise/${exercise.id}/complete`, values, params)
+
+        if (response.data) {
+            getExercises()
+        }
+    }
+
     return (
         <>
             <Head>
@@ -71,7 +97,9 @@ export default function Exercises() {
                     </Box>
 
                     <Box textAlign={'right'} sx={{width: '50%'}}>
-                        <Button variant="outlined" endIcon={<DoneIcon />} onClick={handleFinishWorkout}>
+                        <Button variant="outlined" endIcon={<DoneIcon />} onClick={handleFinishWorkout} disabled={
+                            exercises.filter(exercise => !exercise.completed).length !== 0
+                        }>
                             Complete
                         </Button>
                     </Box>
@@ -82,11 +110,11 @@ export default function Exercises() {
                             <ListItem key={exercise.id} disablePadding secondaryAction={
                                 <>
                                     {exercise.completed ?
-                                        <IconButton edge="end">
+                                        <IconButton edge="end" onClick={startExerciseAgain(exercise)}>
                                             <CheckBoxIcon />
                                         </IconButton>
                                         :
-                                        <IconButton edge="end">
+                                        <IconButton edge="end" onClick={finishExercise(exercise)}>
                                             <CheckBoxOutlineBlankIcon />
                                         </IconButton>
                                     }

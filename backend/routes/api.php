@@ -42,6 +42,7 @@ Route::get('exercises-by-workout/{workout}', [ExerciseController::class, 'exerci
 Route::post('exercise', [ExerciseController::class, 'store']);
 Route::get('exercise/{exercise}', [ExerciseController::class, 'show']);
 Route::put('exercise/{exercise}', [ExerciseController::class, 'update']);
+Route::put('exercise/{exercise}/complete', [ExerciseController::class, 'completeExercise']);
 Route::delete('exercise/{exercise}', [ExerciseController::class, 'destroy']);
 
 Route::get('workout', [WorkoutController::class, 'index']);
