@@ -38,11 +38,13 @@ class WorkoutController extends Controller
      */
     public function store(StoreWorkoutRequest $request)
     {
-        // Todo check if there is an active workout, dont allow to create another one
-
         if (auth()->user()) {
             if (!Training::where('id', $request->training_id)->where('user_id', auth()->user()->id)->exists()) {
                 return response()->json(['error' => 'This training does not belong to this user'], 403);
+            }
+
+            if (Workout::where('user_id', auth()->user()->id)->where('end_date_time', null)->exists()) {
+                return response()->json(['error' => 'You already have active workout. Finish it first.'], 403);
             }
 
             $workout = Workout::create([
@@ -57,6 +59,10 @@ class WorkoutController extends Controller
         } else if (isset(request()->query()['guest-code'])) {
             if (!Training::where('id', $request->training_id)->where('guest_code', request()->query()['guest-code'])->exists()) {
                 return response()->json(['error' => 'This training does not belong to this user'], 403);
+            }
+
+            if (Workout::where('guest_code', request()->query()['guest-code'])->where('end_date_time', null)->exists()) {
+                return response()->json(['error' => 'You already have active workout. Finish it first.'], 403);
             }
 
             $workout = Workout::create([
