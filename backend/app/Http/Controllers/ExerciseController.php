@@ -139,6 +139,10 @@ class ExerciseController extends Controller
 
     public function completeExercise(CompleteExerciseRequest $request, Exercise $exercise)
     {
+        $training = Training::find($exercise->training_id);
+
+        $this->isAuthorized($training);
+
         $exercise->completed = $request->completed;
 
         $exercise->save();

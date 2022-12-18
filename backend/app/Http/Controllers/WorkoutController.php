@@ -63,6 +63,8 @@ class WorkoutController extends Controller
                 'training_id' => $request->training_id,
             ]);
 
+            Exercise::where('training_id', $request->training_id)->update(['completed' => 0]);
+
             return $workout;
         } else if (isset(request()->query()['guest-code'])) {
             if (!Training::where('id', $request->training_id)->where('guest_code', request()->query()['guest-code'])->exists()) {
