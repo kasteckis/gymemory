@@ -27,6 +27,7 @@ Route::middleware('auth')->get('test', function () {
     return 'test back + ' . auth()->user()->id;
 });
 
+Route::get('user', [UserController::class, 'getUser']);
 Route::post('register', [UserController::class, 'register']);
 
 Route::get('trainings', [TrainingController::class, 'index']);

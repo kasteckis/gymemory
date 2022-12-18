@@ -10,6 +10,19 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function getUser(Request $request): JsonResponse
+    {
+        if (auth()->user()) {
+            return response()->json([
+                'user' => auth()->user(),
+            ]);
+        }
+
+        return response()->json([
+            'user' => null,
+        ]);
+    }
+
     public function register(Request $request): JsonResponse
     {
         $content = request(['email', 'password', 'name']);

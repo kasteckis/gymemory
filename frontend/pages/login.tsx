@@ -9,7 +9,7 @@ import {
     DialogTitle,
     TextField
 } from "@mui/material";
-import React, {useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Link from "next/link";
 import LoginDialogTransition from "../components/login/dialogs/LoginDialogTransition";
 import {apiClient} from "../utils/apiClient";
@@ -17,6 +17,7 @@ import {useRouter} from "next/router";
 import styles from '../components/register/register.module.css'
 import * as yup from "yup";
 import {useFormik} from "formik";
+import {getParamsWithGuestCode} from "../utils/params";
 
 interface CreateGuestAccountResponse {
     uuid: string;
@@ -78,6 +79,20 @@ export default function Home() {
 
         await router.push('/trainings');
     }
+
+    const checkIfUserIsAlreadyLoggedIn = useCallback(async () => {
+        const params = getParamsWithGuestCode();
+
+        const response = await apiClient.get('/user', params)
+
+        if (response.data.user) {
+            await router.push('/trainings')
+        }
+    }, [router])
+
+    useEffect(() => {
+        checkIfUserIsAlreadyLoggedIn();
+    }, [checkIfUserIsAlreadyLoggedIn])
 
     return (
         <>
