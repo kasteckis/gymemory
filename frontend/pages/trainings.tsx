@@ -27,6 +27,7 @@ import LoadingCircle from "../components/utils/LoadingCircle";
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {ThemeType} from "../utils/interfaces/ThemeType";
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
+import StartWorkoutDialog from "../components/trainings/dialogs/StartWorkoutDialog";
 
 export default function Trainings() {
     const router = useRouter();
@@ -36,6 +37,7 @@ export default function Trainings() {
     const [createTrainingDialogOpen, setCreateTrainingDialogOpen] = useState<boolean>(false);
     const [editTrainingDialogOpen, setEditTrainingDialogOpen] = useState<boolean>(false);
     const [deleteTrainingDialogOpen, setDeleteTrainingDialogOpen] = useState<boolean>(false);
+    const [startWorkoutDialogOpen, setStartWorkoutDialogOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
 
     const getTrainings = useCallback(async () => {
@@ -88,7 +90,8 @@ export default function Trainings() {
     }
 
     const handleStartExercise = (training: TrainingInterface) => async () => {
-        alert('todo show do you want to start workout?');
+        setSelectedTraining(training)
+        setStartWorkoutDialogOpen(true)
     }
 
     useEffect(() => {
@@ -177,6 +180,13 @@ export default function Trainings() {
                     training={selectedTraining}
                 />
             : undefined}
+            {selectedTraining ?
+                <StartWorkoutDialog
+                    open={startWorkoutDialogOpen}
+                    setOpen={setStartWorkoutDialogOpen}
+                    training={selectedTraining}
+                />
+                : undefined}
         </>
     )
 }

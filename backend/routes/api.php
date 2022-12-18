@@ -5,6 +5,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,11 @@ Route::post('exercise', [ExerciseController::class, 'store']);
 Route::get('exercise/{exercise}', [ExerciseController::class, 'show']);
 Route::put('exercise/{exercise}', [ExerciseController::class, 'update']);
 Route::delete('exercise/{exercise}', [ExerciseController::class, 'destroy']);
+
+Route::get('workout', [WorkoutController::class, 'index']);
+Route::post('workout', [WorkoutController::class, 'store']);
+Route::get('workout/{workout}', [WorkoutController::class, 'show']);
+Route::put('workout/{workout}', [WorkoutController::class, 'update']);
 
 Route::post('guest', [GuestController::class, 'create']);
 
