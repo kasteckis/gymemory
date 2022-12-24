@@ -13,12 +13,17 @@ import {apiClient} from "../../utils/apiClient";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DoneIcon from '@mui/icons-material/Done';
+import LoadingCircle from "../../components/utils/LoadingCircle";
+import {WorkoutInterface} from "../../utils/interfaces/WorkoutInterface";
 
 export default function Exercises() {
     const router = useRouter();
-    let { workout } = router.query;
+    let {workout} = router.query;
     workout = workout ? workout.toString() : undefined;
     const [exercises, setExercises] = useState<ExerciseInterface[]>([]);
+    const [currentWorkout, setCurrentWorkout] = useState<WorkoutInterface|null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [timePassed, setTimePassed] = useState<string>('');
 
     const handleBackButton = async () => {
         await router.push('/trainings');
@@ -34,11 +39,33 @@ export default function Exercises() {
         const exercisesResponse = await apiClient.get('/exercises-by-workout/' + workout, params);
 
         setExercises(exercisesResponse.data)
+        setLoading(false)
     }, [setExercises, router, workout])
 
     useEffect(() => {
+        getCurrentWorkout()
         getExercises()
     }, [])
+
+    useEffect(() => {
+        setInterval(() => {
+
+            if (currentWorkout) {
+                const workoutStarted = new Date(currentWorkout.start_date_time)
+                const now = new Date()
+
+                // @ts-ignore
+                const diffMs = (now - workoutStarted);
+
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = ((diffMs % 60000) / 1000).toFixed(0);
+                // @ts-ignore
+                const answer = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+
+                setTimePassed(answer)
+            }
+        }, 1000)
+    }, [currentWorkout])
 
     const handleFinishWorkout = async () => {
         const params = getParamsWithGuestCode()
@@ -82,6 +109,16 @@ export default function Exercises() {
         }
     }
 
+    const getCurrentWorkout = useCallback(async () => {
+        const params = getParamsWithGuestCode()
+
+        const response = await apiClient.get('/workout', params)
+
+        if (response.data) {
+            setCurrentWorkout(response.data)
+        }
+    }, [])
+
     return (
         <>
             <Head>
@@ -89,44 +126,52 @@ export default function Exercises() {
             </Head>
             <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Current Workout</h1>
-                <Box sx={{display: 'flex'}}>
-                    <Box textAlign={'left'} sx={{width: '50%'}}>
-                        <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={handleBackButton}>
-                            Back
-                        </Button>
-                    </Box>
+                {loading ?
+                    <LoadingCircle/>
+                    :
+                    <>
+                        <h2 style={{textAlign: 'center'}}>Time passed: {timePassed}</h2>
+                        <Box sx={{display: 'flex'}}>
+                            <Box textAlign={'left'} sx={{width: '50%'}}>
+                                <Button variant="outlined" startIcon={<ArrowBackIcon/>} onClick={handleBackButton}>
+                                    Back
+                                </Button>
+                            </Box>
 
-                    <Box textAlign={'right'} sx={{width: '50%'}}>
-                        <Button variant="outlined" endIcon={<DoneIcon />} onClick={handleFinishWorkout} disabled={
-                            exercises.filter(exercise => !exercise.completed).length !== 0
-                        }>
-                            Complete
-                        </Button>
-                    </Box>
-                </Box>
-                <List>
-                    {exercises.map(exercise => {
-                        return (
-                            <ListItem key={exercise.id} disablePadding secondaryAction={
-                                <>
-                                    {exercise.completed ?
-                                        <IconButton edge="end" onClick={startExerciseAgain(exercise)}>
-                                            <CheckBoxIcon />
-                                        </IconButton>
-                                        :
-                                        <IconButton edge="end" onClick={finishExercise(exercise)}>
-                                            <CheckBoxOutlineBlankIcon />
-                                        </IconButton>
-                                    }
-                                </>
-                            }>
-                                <ListItemButton>
-                                    <ListItemText primary={exercise.name} secondary={exercise.count} />
-                                </ListItemButton>
-                            </ListItem>
-                        )
-                    })}
-                </List>
+                            <Box textAlign={'right'} sx={{width: '50%'}}>
+                                <Button variant="outlined" endIcon={<DoneIcon/>} onClick={handleFinishWorkout}
+                                        disabled={
+                                            exercises.filter(exercise => !exercise.completed).length !== 0
+                                        }>
+                                    Complete
+                                </Button>
+                            </Box>
+                        </Box>
+                        <List>
+                            {exercises.map(exercise => {
+                                return (
+                                    <ListItem key={exercise.id} disablePadding secondaryAction={
+                                        <>
+                                            {exercise.completed ?
+                                                <IconButton edge="end" onClick={startExerciseAgain(exercise)}>
+                                                    <CheckBoxIcon/>
+                                                </IconButton>
+                                                :
+                                                <IconButton edge="end" onClick={finishExercise(exercise)}>
+                                                    <CheckBoxOutlineBlankIcon/>
+                                                </IconButton>
+                                            }
+                                        </>
+                                    }>
+                                        <ListItemButton>
+                                            <ListItemText primary={exercise.name} secondary={exercise.count}/>
+                                        </ListItemButton>
+                                    </ListItem>
+                                )
+                            })}
+                        </List>
+                    </>
+                }
             </Container>
         </>
     )

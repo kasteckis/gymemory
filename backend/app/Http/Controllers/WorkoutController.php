@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DTO\WorkoutResponseDTO;
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\UpdateWorkoutRequest;
 use App\Models\Exercise;
@@ -13,19 +14,17 @@ class WorkoutController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
         if (auth()->user()) {
             $workout = Workout::where('user_id', auth()->user()->id)->where('end_date_time', null)->first();
 
-            return $workout;
+            return $workout ? (new WorkoutResponseDTO($workout))->toJson() : null;
         } else if (isset(request()->query()['guest-code'])) {
             $workout = Workout::where('guest_code', request()->query()['guest-code'])->where('end_date_time', null)->first();
 
-            return $workout;
+            return $workout ? (new WorkoutResponseDTO($workout))->toJson() : null;
         }
 
         throw new AuthorizationException('');
