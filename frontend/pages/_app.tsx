@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
     return <>
         <Head>
-            <title>GyMemory</title>
+            <title>Home | GyMemory</title>
             <meta name="description" content="GyMemory" />
             <link rel="manifest" href="/manifest.json" />
             <link rel="apple-touch-icon" href="/icons/icon-152x152.png"></link>

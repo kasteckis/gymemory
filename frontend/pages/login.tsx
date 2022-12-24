@@ -97,7 +97,7 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>GyMemory | Login</title>
+                <title>Login | GyMemory</title>
                 <meta name="description" content="Sign in to access all of the features on gymemory" />
             </Head>
             <Container maxWidth="md">

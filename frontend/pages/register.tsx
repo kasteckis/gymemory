@@ -51,7 +51,7 @@ export default function Register() {
     return (
         <>
             <Head>
-                <title>GyMemory | Register</title>
+                <title>Register | GyMemory</title>
                 <meta name="description" content="Sign up to access all of the features on gymemory" />
             </Head>
             <Container maxWidth="md">

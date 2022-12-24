@@ -123,7 +123,7 @@ export default function Trainings() {
     return (
         <>
             <Head>
-                <title>GyMemory | Trainings</title>
+                <title>Trainings | GyMemory</title>
             </Head>
             <Container maxWidth="md">
                 <Box textAlign={'right'} sx={{display: 'flex'}}>

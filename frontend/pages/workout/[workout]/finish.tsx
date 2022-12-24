@@ -1,10 +1,11 @@
 import {Button, Container} from "@mui/material";
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import {WorkoutInterface} from "../../../utils/interfaces/WorkoutInterface";
 import {apiClient} from "../../../utils/apiClient";
 import {getParamsWithGuestCode} from "../../../utils/params";
 import LoadingCircle from "../../../components/utils/LoadingCircle";
+import Head from "next/head";
 
 export default function Finish() {
     const router = useRouter();
@@ -45,18 +46,23 @@ export default function Finish() {
     }
 
     return (
-        <Container maxWidth="md">
-            <h1 style={{textAlign: 'center'}}>Your workout finished!</h1>
-            {workoutEntity ?
-                <div style={{textAlign: 'center'}}>
-                    <h2>Your locker number: <span style={{color: 'red'}}>{workoutEntity.locker_number}</span></h2>
-                    <h2>Summary</h2>
-                    <h3>1. Your workout lasted - {getWorkoutLength()}</h3>
-                    <Button variant="contained" onClick={handleGoBackToTrainings}>Go back to trainings</Button>
-                </div>
-                :
-                <LoadingCircle />
-            }
-        </Container>
+        <>
+            <Head>
+                <title>Workout Summary | GyMemory</title>
+            </Head>
+            <Container maxWidth="md">
+                <h1 style={{textAlign: 'center'}}>Your workout finished!</h1>
+                {workoutEntity ?
+                    <div style={{textAlign: 'center'}}>
+                        <h2>Your locker number: <span style={{color: 'red'}}>{workoutEntity.locker_number}</span></h2>
+                        <h2>Summary</h2>
+                        <h3>• Your workout lasted - {getWorkoutLength()}</h3>
+                        <Button variant="contained" onClick={handleGoBackToTrainings}>Go back to trainings</Button>
+                    </div>
+                    :
+                    <LoadingCircle />
+                }
+            </Container>
+        </>
     )
 }

@@ -84,7 +84,7 @@ export default function Exercises() {
     return (
         <>
             <Head>
-                <title>GyMemory | Exercises</title>
+                <title>Exercises | GyMemory</title>
             </Head>
             <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Exercises</h1>
