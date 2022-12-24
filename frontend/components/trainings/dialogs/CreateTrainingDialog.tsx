@@ -2,6 +2,8 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} fr
 import React, {Dispatch, SetStateAction, useCallback, useState} from "react";
 import {apiClient} from "../../../utils/apiClient";
 import {getParamsWithGuestCode} from "../../../utils/params";
+import {useFormik} from "formik";
+import * as yup from "yup";
 
 interface CreateTrainingDialogProps {
     open: boolean,
@@ -14,54 +16,57 @@ interface CreateTrainingFormInterface {
 }
 
 const CreateTrainingDialog = ({open, setOpen, getTrainings}: CreateTrainingDialogProps) => {
-    const defaultFormValue = {name: ''};
-    const [form, setForm] = useState<CreateTrainingFormInterface>(defaultFormValue);
-
     const handleClose = () => {
         setOpen(false);
     }
 
-    const handleCreateTraining = async () => {
+    const handleCreateTraining = async (values: CreateTrainingFormInterface) => {
         const params = getParamsWithGuestCode();
 
-        const data = {
-            name: form.name,
-        }
-
-        await apiClient.post('/training', data, params);
+        await apiClient.post('/training', values, params);
         setOpen(false);
-        setForm(defaultFormValue);
         await getTrainings();
     }
 
-    const handleFormChange = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            setForm({
-                ...form,
-                [event.target.name]: event.target.value,
-            });
+    const validationSchema = yup.object({
+        name: yup
+            .string()
+            .required('Training name is required'),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
         },
-        [form, setForm],
-    );
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            handleCreateTraining(values);
+        },
+    });
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Create Training</DialogTitle>
-            <DialogContent>
-                <TextField
-                    value={form.name}
-                    margin="dense"
-                    name="name"
-                    label="Training Name"
-                    fullWidth
-                    variant="standard"
-                    onChange={handleFormChange}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleCreateTraining}>Create Training</Button>
-            </DialogActions>
+            <form onSubmit={formik.handleSubmit}>
+                <DialogTitle>Create Training</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        id="name"
+                        name="name"
+                        label="Training Name"
+                        type='name'
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button type={'submit'}>Create Training</Button>
+                </DialogActions>
+            </form>
         </Dialog>
     )
 }
