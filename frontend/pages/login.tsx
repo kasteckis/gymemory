@@ -18,6 +18,7 @@ import styles from '../components/register/register.module.css'
 import * as yup from "yup";
 import {useFormik} from "formik";
 import {getParamsWithGuestCode} from "../utils/params";
+import LoadingCircle from "../components/utils/LoadingCircle";
 
 interface CreateGuestAccountResponse {
     uuid: string;
@@ -28,6 +29,7 @@ export default function Home() {
 
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [disableDialogButtons, setDisableDialogButtons] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const validationSchema = yup.object({
         email: yup
@@ -87,6 +89,8 @@ export default function Home() {
 
         if (response.data.user) {
             await router.push('/trainings')
+        } else {
+            setLoading(false);
         }
     }, [router])
 
@@ -102,42 +106,48 @@ export default function Home() {
             </Head>
             <Container maxWidth="md">
                 <h1 style={{textAlign: 'center'}}>Login</h1>
-                <form onSubmit={formik.handleSubmit}>
-                    <TextField
-                        fullWidth
-                        variant="standard"
-                        id="email"
-                        name="email"
-                        label="Email"
-                        type='email'
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        error={formik.touched.email && Boolean(formik.errors.email)}
-                        helperText={formik.touched.email && formik.errors.email}
-                    />
-                    <TextField
-                        fullWidth
-                        variant="standard"
-                        type="password"
-                        id="password"
-                        name="password"
-                        label="Password"
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                        error={formik.touched.password && Boolean(formik.errors.password)}
-                        helperText={formik.touched.password && formik.errors.password}
-                    />
+                {loading ?
+                    <LoadingCircle />
+                :
+                    <>
+                        <form onSubmit={formik.handleSubmit}>
+                            <TextField
+                                fullWidth
+                                variant="standard"
+                                id="email"
+                                name="email"
+                                label="Email"
+                                type='email'
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={formik.touched.email && formik.errors.email}
+                            />
+                            <TextField
+                                fullWidth
+                                variant="standard"
+                                type="password"
+                                id="password"
+                                name="password"
+                                label="Password"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                error={formik.touched.password && Boolean(formik.errors.password)}
+                                helperText={formik.touched.password && formik.errors.password}
+                            />
 
-                    <Button className={styles.buttonLogin} type={'submit'} variant="contained">Login</Button>
-                    <Button className={styles.buttonContinueGuest} onClick={handleContinueAsGuest} variant="contained">
-                        Login as guest
-                    </Button>
-                    <Link href="/register" style={{textDecoration: 'none'}}>
-                        <Button className={styles.buttonRegister} variant="contained">
-                            Register
-                        </Button>
-                    </Link>
-                </form>
+                            <Button className={styles.buttonLogin} type={'submit'} variant="contained">Login</Button>
+                            <Button className={styles.buttonContinueGuest} onClick={handleContinueAsGuest} variant="contained">
+                                Login as guest
+                            </Button>
+                            <Link href="/register" style={{textDecoration: 'none'}}>
+                                <Button className={styles.buttonRegister} variant="contained">
+                                    Register
+                                </Button>
+                            </Link>
+                        </form>
+                    </>
+                }
             </Container>
 
             <Dialog
