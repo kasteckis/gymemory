@@ -40,32 +40,7 @@ export default function Exercises() {
 
         setExercises(exercisesResponse.data)
         setLoading(false)
-    }, [setExercises, router, workout])
-
-    useEffect(() => {
-        getCurrentWorkout()
-        getExercises()
-    }, [])
-
-    useEffect(() => {
-        setInterval(() => {
-
-            if (currentWorkout) {
-                const workoutStarted = new Date(currentWorkout.start_date_time)
-                const now = new Date()
-
-                // @ts-ignore
-                const diffMs = (now - workoutStarted);
-
-                const minutes = Math.floor(diffMs / 60000);
-                const seconds = ((diffMs % 60000) / 1000).toFixed(0);
-                // @ts-ignore
-                const answer = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-
-                setTimePassed(answer)
-            }
-        }, 1000)
-    }, [currentWorkout])
+    }, [setExercises, workout])
 
     const handleFinishWorkout = async () => {
         const params = getParamsWithGuestCode()
@@ -118,6 +93,31 @@ export default function Exercises() {
             setCurrentWorkout(response.data)
         }
     }, [])
+
+    useEffect(() => {
+        getCurrentWorkout()
+        getExercises()
+    }, [getCurrentWorkout, getExercises])
+
+    useEffect(() => {
+        setInterval(() => {
+
+            if (currentWorkout) {
+                const workoutStarted = new Date(currentWorkout.start_date_time)
+                const now = new Date()
+
+                // @ts-ignore
+                const diffMs = (now - workoutStarted);
+
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = ((diffMs % 60000) / 1000).toFixed(0);
+                // @ts-ignore
+                const answer = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+
+                setTimePassed(answer)
+            }
+        }, 1000)
+    }, [currentWorkout])
 
     return (
         <>

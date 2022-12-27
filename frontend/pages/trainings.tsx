@@ -118,7 +118,7 @@ export default function Trainings() {
         } else if (username) {
             setUsername(username)
         }
-    }, [getTrainings, setUsername])
+    }, [getCurrentWorkout, getTrainings, setUsername])
 
     return (
         <>
