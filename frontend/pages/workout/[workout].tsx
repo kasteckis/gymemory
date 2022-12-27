@@ -15,6 +15,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DoneIcon from '@mui/icons-material/Done';
 import LoadingCircle from "../../components/utils/LoadingCircle";
 import {WorkoutInterface} from "../../utils/interfaces/WorkoutInterface";
+import EditExerciseDialog from "../../components/exercises/dialogs/EditExerciseDialog";
 
 export default function Exercises() {
     const router = useRouter();
@@ -24,6 +25,8 @@ export default function Exercises() {
     const [currentWorkout, setCurrentWorkout] = useState<WorkoutInterface|null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [timePassed, setTimePassed] = useState<string>('');
+    const [selectedExercise, setSelectedExercise] = useState<ExerciseInterface | undefined>();
+    const [editExerciseDialogOpen, setEditExerciseDialogOpen] = useState<boolean>(false);
 
     const handleBackButton = async () => {
         await router.push('/trainings');
@@ -94,6 +97,11 @@ export default function Exercises() {
         }
     }, [])
 
+    const handleOpenExercise = (exercise: ExerciseInterface) => () => {
+        setSelectedExercise(exercise)
+        setEditExerciseDialogOpen(true)
+    }
+
     useEffect(() => {
         getCurrentWorkout()
         getExercises()
@@ -163,7 +171,7 @@ export default function Exercises() {
                                             }
                                         </>
                                     }>
-                                        <ListItemButton>
+                                        <ListItemButton onClick={handleOpenExercise(exercise)}>
                                             <ListItemText primary={exercise.name} secondary={exercise.count}/>
                                         </ListItemButton>
                                     </ListItem>
@@ -173,6 +181,12 @@ export default function Exercises() {
                     </>
                 }
             </Container>
+            {selectedExercise && <EditExerciseDialog
+                open={editExerciseDialogOpen}
+                setOpen={setEditExerciseDialogOpen}
+                getExercises={getExercises}
+                exercise={selectedExercise}
+            />}
         </>
     )
 }
