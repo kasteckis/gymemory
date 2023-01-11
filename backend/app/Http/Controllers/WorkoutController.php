@@ -114,6 +114,27 @@ class WorkoutController extends Controller
         return response()->json(['error' => 'Forbidden'], 403);
     }
 
+    public function markAllWorkoutExercisesAsFinished(Workout $workout)
+    {
+        $training_id = $workout->training_id;
+
+        if (auth()->user()) {
+            if ($workout->user_id == auth()->user()->id) {
+                Exercise::where('training_id', $training_id)->update(['completed' => true]);
+
+                return response()->json();
+            }
+        } else if (isset(request()->query()['guest-code'])) {
+            if ($workout->guest_code === request()->query()['guest-code']) {
+                Exercise::where('training_id', $training_id)->update(['completed' => true]);
+
+                return response()->json();
+            }
+        }
+
+        return response()->json(['error' => 'Forbidden'], 403);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

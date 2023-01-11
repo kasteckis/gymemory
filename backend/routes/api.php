@@ -49,6 +49,7 @@ Route::get('workout', [WorkoutController::class, 'index']);
 Route::post('workout', [WorkoutController::class, 'store']);
 Route::get('workout/{workout}', [WorkoutController::class, 'show']);
 Route::put('workout/{workout}', [WorkoutController::class, 'update']);
+Route::post('workout/{workout}/complete', [WorkoutController::class, 'markAllWorkoutExercisesAsFinished']);
 
 Route::post('guest', [GuestController::class, 'create']);
 

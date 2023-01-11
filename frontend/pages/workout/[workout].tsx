@@ -16,6 +16,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import LoadingCircle from "../../components/utils/LoadingCircle";
 import {WorkoutInterface} from "../../utils/interfaces/WorkoutInterface";
 import EditExerciseDialog from "../../components/exercises/dialogs/EditExerciseDialog";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function Exercises() {
     const router = useRouter();
@@ -102,6 +103,17 @@ export default function Exercises() {
         setEditExerciseDialogOpen(true)
     }
 
+    const handleFinishAllExercises = async () => {
+        const params = getParamsWithGuestCode()
+
+        const values = {}
+
+        const response = await apiClient.post(`/workout/${workout}/complete`, values, params)
+        if (response.data) {
+            await getExercises();
+        }
+    }
+
     useEffect(() => {
         getCurrentWorkout()
         getExercises()
@@ -133,6 +145,13 @@ export default function Exercises() {
                 <title>Current Workout | GyMemory</title>
             </Head>
             <Container maxWidth="md">
+                <Box textAlign={'right'} sx={{display: 'flex'}}>
+                    <div style={{width: '10%'}}></div>
+                    <h1 style={{textAlign: 'center', width: '80%'}}>Trainings</h1>
+                    <IconButton sx={{width: '10%'}} onClick={handleFinishAllExercises} disableRipple={true}>
+                        <MoreVertIcon />
+                    </IconButton>
+                </Box>
                 <h1 style={{textAlign: 'center'}}>Current Workout</h1>
                 {loading ?
                     <LoadingCircle/>
