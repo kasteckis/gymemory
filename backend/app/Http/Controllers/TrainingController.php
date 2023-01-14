@@ -8,17 +8,12 @@ use App\Models\Exercise;
 use App\Models\Training;
 use App\Models\Workout;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TrainingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(): Collection
     {
         if (auth()->user()) {
             $trainings = Training::where('user_id', auth()->user()->id)->get();
@@ -53,13 +48,7 @@ class TrainingController extends Controller
         return [];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreTrainingRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreTrainingRequest $request)
+    public function store(StoreTrainingRequest $request): Training
     {
         if (auth()->user()) {
             $training = new Training();
@@ -82,27 +71,14 @@ class TrainingController extends Controller
         throw new BadRequestHttpException('');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Training $training
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Training $training)
+    public function show(Training $training): Training
     {
         $this->isAuthorized($training);
 
         return $training;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateTrainingRequest  $request
-     * @param  \App\Models\Training  $training
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateTrainingRequest $request, Training $training)
+    public function update(UpdateTrainingRequest $request, Training $training): Training
     {
         $this->isAuthorized($training);
 
@@ -112,13 +88,7 @@ class TrainingController extends Controller
         return $training;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Training  $training
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Training $training)
+    public function destroy(Training $training): array
     {
         $this->isAuthorized($training);
 

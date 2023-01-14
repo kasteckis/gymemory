@@ -9,13 +9,11 @@ use App\Models\Exercise;
 use App\Models\Training;
 use App\Models\Workout;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 
 class WorkoutController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): array|null
     {
         if (auth()->user()) {
             $workout = Workout::where('user_id', auth()->user()->id)->where('end_date_time', null)->first();
@@ -30,20 +28,14 @@ class WorkoutController extends Controller
         throw new AuthorizationException('');
     }
 
-    public function show(Workout $workout)
+    public function show(Workout $workout): Workout
     {
         $this->isAuthorized($workout);
 
         return $workout;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreWorkoutRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreWorkoutRequest $request)
+    public function store(StoreWorkoutRequest $request): Workout
     {
         if (auth()->user()) {
             if (!Training::where('id', $request->training_id)->where('user_id', auth()->user()->id)->exists()) {
@@ -84,16 +76,11 @@ class WorkoutController extends Controller
 
             return $workout;
         }
+
+        throw new AuthorizationException('');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateWorkoutRequest  $request
-     * @param  \App\Models\Workout  $workout
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateWorkoutRequest $request, Workout $workout)
+    public function update(UpdateWorkoutRequest $request, Workout $workout): Workout|JsonResponse
     {
         if (auth()->user()) {
             if ($workout->user_id == auth()->user()->id) {
@@ -114,7 +101,7 @@ class WorkoutController extends Controller
         return response()->json(['error' => 'Forbidden'], 403);
     }
 
-    public function markAllWorkoutExercisesAsFinished(Workout $workout)
+    public function markAllWorkoutExercisesAsFinished(Workout $workout): JsonResponse
     {
         $training_id = $workout->training_id;
 
@@ -133,17 +120,6 @@ class WorkoutController extends Controller
         }
 
         return response()->json(['error' => 'Forbidden'], 403);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Workout  $workout
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Workout $workout)
-    {
-        //
     }
 
     public function isAuthorized(Workout $workout): bool

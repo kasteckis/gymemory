@@ -8,16 +8,12 @@ use App\Http\Requests\UpdateExerciseRequest;
 use App\Models\Exercise;
 use App\Models\Training;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ExerciseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Training $training)
+    public function index(Training $training): Collection
     {
         if (auth()->user()) {
             return DB::table('exercises')
@@ -40,7 +36,7 @@ class ExerciseController extends Controller
         return [];
     }
 
-    public function exercisesByWorkout(string $workout)
+    public function exercisesByWorkout(string $workout): Collection
     {
         if (auth()->user()) {
             return Exercise::
@@ -81,13 +77,7 @@ class ExerciseController extends Controller
         return [];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreExerciseRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreExerciseRequest $request)
+    public function store(StoreExerciseRequest $request): Exercise
     {
         $training = Training::find($request->training_id);
 
@@ -102,13 +92,7 @@ class ExerciseController extends Controller
         return $exercise;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Exercise  $exercise
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Exercise $exercise)
+    public function show(Exercise $exercise): Exercise
     {
         $training = Training::find($exercise->training_id);
 
@@ -117,14 +101,7 @@ class ExerciseController extends Controller
         return $exercise;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateExerciseRequest  $request
-     * @param  \App\Models\Exercise  $exercise
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateExerciseRequest $request, Exercise $exercise)
+    public function update(UpdateExerciseRequest $request, Exercise $exercise): Exercise
     {
         $training = Training::find($exercise->training_id);
 
@@ -137,7 +114,7 @@ class ExerciseController extends Controller
         return $exercise;
     }
 
-    public function completeExercise(CompleteExerciseRequest $request, Exercise $exercise)
+    public function completeExercise(CompleteExerciseRequest $request, Exercise $exercise): Exercise
     {
         $training = Training::find($exercise->training_id);
 
@@ -150,13 +127,7 @@ class ExerciseController extends Controller
         return $exercise;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Exercise  $exercise
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Exercise $exercise)
+    public function destroy(Exercise $exercise): array
     {
         $training = Training::find($exercise->training_id);
 
