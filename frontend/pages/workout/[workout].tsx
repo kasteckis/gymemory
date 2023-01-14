@@ -17,6 +17,7 @@ import LoadingCircle from "../../components/utils/LoadingCircle";
 import {WorkoutInterface} from "../../utils/interfaces/WorkoutInterface";
 import EditExerciseDialog from "../../components/exercises/dialogs/EditExerciseDialog";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import WorkoutSettings from "../../components/workouts/dialogs/WorkoutSettings";
 
 export default function Exercises() {
     const router = useRouter();
@@ -148,9 +149,7 @@ export default function Exercises() {
                 <Box textAlign={'right'} sx={{display: 'flex'}}>
                     <div style={{width: '10%'}}></div>
                     <h1 style={{textAlign: 'center', width: '80%'}}>Trainings</h1>
-                    <IconButton sx={{width: '10%'}} onClick={handleFinishAllExercises} disableRipple={true}>
-                        <MoreVertIcon />
-                    </IconButton>
+                    <WorkoutSettings handleFinishAllExercises={handleFinishAllExercises} />
                 </Box>
                 <h1 style={{textAlign: 'center'}}>Current Workout</h1>
                 {loading ?
