@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTrainingRequest;
 use App\Http\Requests\UpdateTrainingRequest;
 use App\Models\Exercise;
 use App\Models\Training;
+use App\Models\Workout;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -120,6 +121,9 @@ class TrainingController extends Controller
     public function destroy(Training $training)
     {
         $this->isAuthorized($training);
+
+        // Check if workout exists, if it does, also delete that workouts.
+        Workout::where('training_id', $training->id)->delete();
 
         $training->delete();
 
