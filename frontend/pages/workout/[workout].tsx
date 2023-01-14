@@ -16,7 +16,6 @@ import DoneIcon from '@mui/icons-material/Done';
 import LoadingCircle from "../../components/utils/LoadingCircle";
 import {WorkoutInterface} from "../../utils/interfaces/WorkoutInterface";
 import EditExerciseDialog from "../../components/exercises/dialogs/EditExerciseDialog";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import WorkoutSettings from "../../components/workouts/dialogs/WorkoutSettings";
 
 export default function Exercises() {
@@ -124,13 +123,15 @@ export default function Exercises() {
         setInterval(() => {
 
             if (currentWorkout) {
-                const workoutStarted = new Date(currentWorkout.start_date_time)
-                const now = new Date()
+                const workoutStarted = new Date(currentWorkout.start_date_time) // In UTC
+                const now = new Date() // In our timezone
+
+                const diffFromOurTimezoneToUTC = now.getTimezoneOffset();
 
                 // @ts-ignore
                 const diffMs = (now - workoutStarted);
 
-                const minutes = Math.floor(diffMs / 60000);
+                const minutes = Math.floor(diffMs / 60000) + diffFromOurTimezoneToUTC;
                 const seconds = ((diffMs % 60000) / 1000).toFixed(0);
                 // @ts-ignore
                 const answer = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
