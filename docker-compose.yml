@@ -30,13 +30,11 @@ services:
     volumes:
       - ./backend:/var/www/html/
       - ./.docker/virtualhost.conf:/etc/apache2/sites-available/000-default.conf
+      - ./.docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     ports:
       - "80:80"
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       - mysql
-
-#  mailhog:
-#    image: mailhog/mailhog
-#    ports:
-#      - "1025:1025"
-#      - "8025:8025"

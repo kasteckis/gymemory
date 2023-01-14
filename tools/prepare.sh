@@ -1,5 +1,5 @@
 docker compose stop
-docker compose up -d
+docker compose up -d --build
 docker compose exec web composer install
 # todo fix this
 sleep 10
