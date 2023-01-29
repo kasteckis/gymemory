@@ -23,7 +23,9 @@ const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrain
         setOpen(false);
     }
 
-    const handleEditTraining = async () => {
+    const handleEditTraining = async (event: any) => {
+        event.preventDefault();
+
         const params = getParamsWithGuestCode();
 
         const data = {
@@ -51,22 +53,24 @@ const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrain
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Edit Training</DialogTitle>
-            <DialogContent>
-                <TextField
-                    value={form.name}
-                    margin="dense"
-                    name="name"
-                    label="Training Name"
-                    fullWidth
-                    variant="standard"
-                    onChange={handleFormChange}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleEditTraining}>Update Training</Button>
-            </DialogActions>
+            <form onSubmit={handleEditTraining}>
+                <DialogTitle>Edit Training</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        value={form.name}
+                        margin="dense"
+                        name="name"
+                        label="Training Name"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleFormChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button type={'submit'} onClick={handleEditTraining}>Update Training</Button>
+                </DialogActions>
+            </form>
         </Dialog>
     )
 }

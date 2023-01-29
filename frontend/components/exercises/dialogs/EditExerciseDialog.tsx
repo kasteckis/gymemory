@@ -24,7 +24,9 @@ const EditExerciseDialog = ({open, setOpen, getExercises, exercise}: CreateExerc
         setOpen(false);
     }
 
-    const handleEditExercise = async () => {
+    const handleEditExercise = async (event: any) => {
+        event.preventDefault();
+
         const params = getParamsWithGuestCode();
 
         const data = {
@@ -53,31 +55,33 @@ const EditExerciseDialog = ({open, setOpen, getExercises, exercise}: CreateExerc
 
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Edit Exercise</DialogTitle>
-            <DialogContent>
-                <TextField
-                    value={form.name}
-                    margin="dense"
-                    name="name"
-                    label="Exercise Name"
-                    fullWidth
-                    variant="standard"
-                    onChange={handleFormChange}
-                />
-                <TextField
-                    value={form.count}
-                    margin="dense"
-                    name="count"
-                    label="Exercise Count"
-                    fullWidth
-                    variant="standard"
-                    onChange={handleFormChange}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleEditExercise}>Update Exercise</Button>
-            </DialogActions>
+            <form onSubmit={handleEditExercise}>
+                <DialogTitle>Edit Exercise</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        value={form.name}
+                        margin="dense"
+                        name="name"
+                        label="Exercise Name"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleFormChange}
+                    />
+                    <TextField
+                        value={form.count}
+                        margin="dense"
+                        name="count"
+                        label="Exercise Count"
+                        fullWidth
+                        variant="standard"
+                        onChange={handleFormChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button type={'submit'} onClick={handleEditExercise}>Update Exercise</Button>
+                </DialogActions>
+            </form>
         </Dialog>
     )
 }
