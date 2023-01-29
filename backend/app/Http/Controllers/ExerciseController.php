@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompleteExerciseRequest;
 use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
+use App\Http\Services\ExerciseSyncService;
 use App\Models\Exercise;
 use App\Models\Training;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -89,6 +90,8 @@ class ExerciseController extends Controller
         $exercise->training_id = $request->training_id;
         $exercise->save();
 
+        ExerciseSyncService::syncOtherExerciseCounts($exercise, $request->count);
+
         return $exercise;
     }
 
@@ -110,6 +113,8 @@ class ExerciseController extends Controller
         $exercise->name = $request->name;
         $exercise->count = $request->count;
         $exercise->save();
+
+        ExerciseSyncService::syncOtherExerciseCounts($exercise, $request->count);
 
         return $exercise;
     }
