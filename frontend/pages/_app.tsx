@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { ThemeType } from '../utils/interfaces/ThemeType';
 import { GlobalAlert } from '../utils/interfaces/GlobalAlert';
 import { apiClient } from '../utils/apiClient';
+import CustomSnackbar from "../components/utils/CustomSnackbar";
 
 const defaultTheme = 'dark';
 
@@ -73,16 +74,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider theme={darkTheme}>
-        <Snackbar
-          open={alert.open}
-          autoHideDuration={6000}
-          onClose={handleCloseAlert}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{ width: '100%' }}>
-            {alert.message}
-          </Alert>
-        </Snackbar>
+        <CustomSnackbar alert={alert} handleCloseAlert={handleCloseAlert} />
         <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>

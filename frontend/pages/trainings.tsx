@@ -24,12 +24,12 @@ import DeleteTrainingDialog from '../components/trainings/dialogs/DeleteTraining
 import logout from '../utils/logout';
 import EmptyList from '../components/typography/EmptyList';
 import LoadingCircle from '../components/utils/LoadingCircle';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { ThemeType } from '../utils/interfaces/ThemeType';
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import StartWorkoutDialog from '../components/trainings/dialogs/StartWorkoutDialog';
 import { WorkoutInterface } from '../utils/interfaces/WorkoutInterface';
 import Link from 'next/link';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsDialog from "../components/settings/SettingsDialog";
 
 export default function Trainings() {
   const router = useRouter();
@@ -40,6 +40,7 @@ export default function Trainings() {
   const [editTrainingDialogOpen, setEditTrainingDialogOpen] = useState<boolean>(false);
   const [deleteTrainingDialogOpen, setDeleteTrainingDialogOpen] = useState<boolean>(false);
   const [startWorkoutDialogOpen, setStartWorkoutDialogOpen] = useState<boolean>(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [currentWorkout, setCurrentWorkout] = useState<WorkoutInterface | null>(null);
 
@@ -90,22 +91,14 @@ export default function Trainings() {
     await router.push('/login');
   };
 
-  const handleThemeChange = () => {
-    const currentTheme = localStorage.getItem('theme') as ThemeType;
-
-    if (currentTheme) {
-      localStorage.setItem('theme', currentTheme === 'dark' ? 'light' : 'dark');
-    } else {
-      localStorage.setItem('theme', 'dark');
-    }
-
-    location.reload();
-  };
-
   const handleStartExercise = (training: TrainingInterface) => async () => {
     setSelectedTraining(training);
     setStartWorkoutDialogOpen(true);
   };
+
+  const turnOnSettingsDialog = () => {
+    setSettingsDialogOpen(true);
+  }
 
   useEffect(() => {
     getTrainings();
@@ -129,8 +122,8 @@ export default function Trainings() {
         <Box textAlign={'right'} sx={{ display: 'flex' }}>
           <div style={{ width: '10%' }}></div>
           <h1 style={{ textAlign: 'center', width: '80%' }}>Trainings</h1>
-          <IconButton sx={{ width: '10%' }} onClick={handleThemeChange} disableRipple={true}>
-            <Brightness7Icon />
+          <IconButton sx={{ width: '10%' }} onClick={turnOnSettingsDialog} disableRipple={true}>
+            <SettingsIcon />
           </IconButton>
         </Box>
         <h3 style={{ textAlign: 'center' }}>Sup, {username} !</h3>
@@ -203,29 +196,33 @@ export default function Trainings() {
         setOpen={setCreateTrainingDialogOpen}
         getTrainings={getTrainings}
       />
-      {selectedTraining ? (
+      {selectedTraining && (
         <EditTrainingDialog
           open={editTrainingDialogOpen}
           setOpen={setEditTrainingDialogOpen}
           getTrainings={getTrainings}
           training={selectedTraining}
         />
-      ) : undefined}
-      {selectedTraining ? (
+      )}
+      {selectedTraining && (
         <DeleteTrainingDialog
           open={deleteTrainingDialogOpen}
           setOpen={setDeleteTrainingDialogOpen}
           getTrainings={getTrainings}
           training={selectedTraining}
         />
-      ) : undefined}
-      {selectedTraining ? (
+      )}
+      {selectedTraining && (
         <StartWorkoutDialog
           open={startWorkoutDialogOpen}
           setOpen={setStartWorkoutDialogOpen}
           training={selectedTraining}
         />
-      ) : undefined}
+      )}
+      <SettingsDialog
+        open={settingsDialogOpen}
+        setOpen={setSettingsDialogOpen}
+      />
     </>
   );
 }

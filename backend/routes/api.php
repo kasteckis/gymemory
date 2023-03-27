@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkoutController;
@@ -50,6 +51,9 @@ Route::post('workout', [WorkoutController::class, 'store']);
 Route::get('workout/{workout}', [WorkoutController::class, 'show']);
 Route::put('workout/{workout}', [WorkoutController::class, 'update']);
 Route::post('workout/{workout}/complete', [WorkoutController::class, 'markAllWorkoutExercisesAsFinished']);
+
+Route::get('generate-api-token', [SettingsController::class, 'createOrGetApiToStopWorkout']);
+Route::get('stop-workout', [SettingsController::class, 'stopAllOngoingWorkouts']);
 
 Route::post('guest', [GuestController::class, 'create']);
 
