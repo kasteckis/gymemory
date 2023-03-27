@@ -1,78 +1,92 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
-import {apiClient} from "../../../utils/apiClient";
-import {getParamsWithGuestCode} from "../../../utils/params";
-import {TrainingInterface} from "../../../utils/interfaces/training";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@mui/material';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { apiClient } from '../../../utils/apiClient';
+import { getParamsWithGuestCode } from '../../../utils/params';
+import { TrainingInterface } from '../../../utils/interfaces/training';
 
 interface CreateTrainingDialogProps {
-    open: boolean,
-    setOpen: Dispatch<SetStateAction<boolean>>,
-    getTrainings: () => Promise<void>,
-    training: TrainingInterface,
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  getTrainings: () => Promise<void>;
+  training: TrainingInterface;
 }
 
 interface EditTrainingFormInterface {
-    id: number,
-    name: string,
+  id: number;
+  name: string;
 }
 
-const EditTrainingDialog = ({open, setOpen, getTrainings, training}: CreateTrainingDialogProps) => {
-    const [form, setForm] = useState<EditTrainingFormInterface>(training);
+const EditTrainingDialog = ({
+  open,
+  setOpen,
+  getTrainings,
+  training,
+}: CreateTrainingDialogProps) => {
+  const [form, setForm] = useState<EditTrainingFormInterface>(training);
 
-    const handleClose = () => {
-        setOpen(false);
-    }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const handleEditTraining = async (event: any) => {
-        event.preventDefault();
+  const handleEditTraining = async (event: any) => {
+    event.preventDefault();
 
-        const params = getParamsWithGuestCode();
+    const params = getParamsWithGuestCode();
 
-        const data = {
-            name: form.name,
-        }
+    const data = {
+      name: form.name,
+    };
 
-        await apiClient.put('/training/' + training.id, data, params);
-        setOpen(false);
-        await getTrainings();
-    }
+    await apiClient.put('/training/' + training.id, data, params);
+    setOpen(false);
+    await getTrainings();
+  };
 
-    const handleFormChange = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            setForm({
-                ...form,
-                [event.target.name]: event.target.value,
-            });
-        },
-        [form, setForm],
-    );
+  const handleFormChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setForm({
+        ...form,
+        [event.target.name]: event.target.value,
+      });
+    },
+    [form, setForm],
+  );
 
-    useEffect(() => {
-        setForm(training);
-    }, [training])
+  useEffect(() => {
+    setForm(training);
+  }, [training]);
 
-    return (
-        <Dialog open={open} onClose={handleClose}>
-            <form onSubmit={handleEditTraining}>
-                <DialogTitle>Edit Training</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        value={form.name}
-                        margin="dense"
-                        name="name"
-                        label="Training Name"
-                        fullWidth
-                        variant="standard"
-                        onChange={handleFormChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type={'submit'} onClick={handleEditTraining}>Update Training</Button>
-                </DialogActions>
-            </form>
-        </Dialog>
-    )
-}
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <form onSubmit={handleEditTraining}>
+        <DialogTitle>Edit Training</DialogTitle>
+        <DialogContent>
+          <TextField
+            value={form.name}
+            margin="dense"
+            name="name"
+            label="Training Name"
+            fullWidth
+            variant="standard"
+            onChange={handleFormChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type={'submit'} onClick={handleEditTraining}>
+            Update Training
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+};
 
 export default EditTrainingDialog;

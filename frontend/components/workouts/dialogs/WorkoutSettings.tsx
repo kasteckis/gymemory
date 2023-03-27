@@ -24,23 +24,26 @@ const WorkoutSettings = ({handleFinishAllExercises}: WorkoutSettingsProps) => {
     }
 
     return (
-        <>
-            <IconButton sx={{width: '10%'}} onClick={handleOpen} disableRipple={true}>
-                <MoreVertIcon />
-            </IconButton>
+      <>
+        <IconButton sx={{ width: '10%' }} onClick={handleOpen} disableRipple={true}>
+          <MoreVertIcon />
+        </IconButton>
 
-            <Dialog onClose={handleClose} open={dialogOpen}>
-                <DialogTitle sx={{textAlign: 'center'}}>Workout Settings</DialogTitle>
-                <Divider />
-                <List sx={{ pt: 0 }}>
-                    <ListItem disableGutters>
-                        <ListItemButton onClick={handleSelectFinishWorkout}>
-                            <ListItemText sx={{textAlign: 'center'}} primary={'Mark all exercises as completed'} />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Dialog>
-        </>
+        <Dialog onClose={handleClose} open={dialogOpen}>
+          <DialogTitle sx={{ textAlign: 'center' }}>Workout Settings</DialogTitle>
+          <Divider />
+          <List sx={{ pt: 0 }}>
+            <ListItem disableGutters>
+              <ListItemButton onClick={handleSelectFinishWorkout}>
+                <ListItemText
+                  sx={{ textAlign: 'center' }}
+                  primary={'Mark all exercises as completed'}
+                />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Dialog>
+      </>
     );
 }
 
