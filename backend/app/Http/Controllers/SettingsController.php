@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Workout;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Nonstandard\Uuid;
 
 class SettingsController extends Controller
 {
@@ -15,7 +16,6 @@ class SettingsController extends Controller
         $apiToken = '';
 
         // TODO: Regenerate API key on separate endpoint.
-        // TODO: Check if API key doesnt exist in DB.
 
         if (auth()->user()) {
             $user = User::findOrFail(auth()->user()->id);
@@ -23,20 +23,13 @@ class SettingsController extends Controller
             if ($user->api_token) {
                 $apiToken = $user->api_token;
             } else {
-                $apiToken = bin2hex(random_bytes(32));
+                $apiToken = Uuid::uuid4()->toString();
 
                 $user->api_token = $apiToken;
                 $user->saveOrFail();
             }
         } else if (isset(request()->query()['guest-code'])) {
-            $user = User::where('guest_code', request()->query()['guest-code'])->firstOrFail();
-
-            if (!$user->api_token) {
-                $apiToken = bin2hex(random_bytes(32));
-
-                $user->api_token = $apiToken;
-                $user->saveOrFail();
-            }
+            $apiToken = request()->query()['guest-code'];
         }
 
         return response()->json($apiToken);
@@ -45,14 +38,26 @@ class SettingsController extends Controller
     public function stopAllOngoingWorkouts(Request $request): JsonResponse
     {
         if (isset(request()->query()['token'])) {
-            $user = User::where('api_token', request()->query()['token'])->firstOrFail();
+            $user = User::where('api_token', request()->query()['token'])->first();
 
-            $workouts = Workout::where('user_id', $user->id)->where('end_date_time', null)->get();
+            if ($user) {
+                $workouts = Workout::where('user_id', $user->id)->where('end_date_time', null)->get();
 
-            foreach ($workouts as $workout) {
-                $workout->update(['end_date_time' => new \DateTime()]);
-                $training_id = $workout->training_id;
-                Exercise::where('training_id', $training_id)->update(['completed' => true]);
+                foreach ($workouts as $workout) {
+                    $workout->update(['end_date_time' => new \DateTime()]);
+                    $training_id = $workout->training_id;
+                    Exercise::where('training_id', $training_id)->update(['completed' => true]);
+                }
+            } else {
+                // If User was not found, maybe that was guest code. So lets use that to stop ongoing workouts.
+
+                $workouts = Workout::where('guest_code', request()->query()['token'])->where('end_date_time', null)->get();
+
+                foreach ($workouts as $workout) {
+                    $workout->update(['end_date_time' => new \DateTime()]);
+                    $training_id = $workout->training_id;
+                    Exercise::where('training_id', $training_id)->update(['completed' => true]);
+                }
             }
         }
 
