@@ -35,6 +35,22 @@ class SettingsController extends Controller
         return response()->json($apiToken);
     }
 
+    public function regenerateApiToStopWorkout(Request $request): JsonResponse
+    {
+        $apiToken = '';
+
+        if (auth()->user()) {
+            $user = User::findOrFail(auth()->user()->id);
+
+            $apiToken = Uuid::uuid4()->toString();
+
+            $user->api_token = $apiToken;
+            $user->saveOrFail();
+        }
+
+        return response()->json($apiToken);
+    }
+
     public function stopAllOngoingWorkouts(Request $request): JsonResponse
     {
         if (isset(request()->query()['token'])) {

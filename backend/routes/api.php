@@ -53,6 +53,7 @@ Route::put('workout/{workout}', [WorkoutController::class, 'update']);
 Route::post('workout/{workout}/complete', [WorkoutController::class, 'markAllWorkoutExercisesAsFinished']);
 
 Route::get('generate-api-token', [SettingsController::class, 'createOrGetApiToStopWorkout']);
+Route::get('regenerate-api-token', [SettingsController::class, 'regenerateApiToStopWorkout']);
 Route::get('stop-workout', [SettingsController::class, 'stopAllOngoingWorkouts']);
 
 Route::post('guest', [GuestController::class, 'create']);
