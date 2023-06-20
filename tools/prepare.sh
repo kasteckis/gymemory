@@ -1,14 +1,22 @@
 docker compose stop
 docker compose up -d --build
 docker compose exec web composer install
-# todo fix this
-sleep 10
-docker compose exec web php artisan migrate
-docker compose exec web php artisan cache:clear
-docker compose exec web php artisan route:clear
-docker compose exec web php artisan config:clear
-docker compose exec web php artisan view:clear
-docker compose exec web php artisan migrate
+
+docker compose exec web cp .env.example .env
+docker compose exec web php artisan optimize:clear
+
+while true # TODO: Think of a better solution, because this feels wrong.
+do
+    docker compose exec web php artisan migrate --force
+
+    if [ $? -eq 0 ]; then
+        echo "Migration succeeded."
+        break
+    fi
+
+    echo "Migration failed. Retrying..."
+    sleep 5
+done
 
 cd frontend
 yarn install
