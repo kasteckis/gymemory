@@ -1,3 +1,4 @@
+#!/bin/bash
 docker compose stop
 docker compose up -d --build
 docker compose exec web composer install
