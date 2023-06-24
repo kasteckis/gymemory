@@ -22,6 +22,7 @@ import EditExerciseDialog from '../../components/exercises/dialogs/EditExerciseD
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EmptyList from '../../components/typography/EmptyList';
 import LoadingCircle from '../../components/utils/LoadingCircle';
+import DeleteExerciseDialog from '../../components/exercises/dialogs/DeleteExerciseDialog';
 
 export default function Exercises() {
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function Exercises() {
   const [selectedExercise, setSelectedExercise] = useState<ExerciseInterface | undefined>();
   const [createExerciseDialogOpen, setCreateExerciseDialogOpen] = useState<boolean>(false);
   const [editExerciseDialogOpen, setEditExerciseDialogOpen] = useState<boolean>(false);
+  const [deleteExerciseDialogOpen, setDeleteExerciseDialogOpen] = useState<boolean>(false);
 
   const getExercises = useCallback(async () => {
     if (!training) {
@@ -53,10 +55,8 @@ export default function Exercises() {
   }, [setExercises, router, training]);
 
   const handleDeleteButton = (exercise: ExerciseInterface) => async () => {
-    const params = getParamsWithGuestCode();
-
-    await apiClient.delete('/exercise/' + exercise.id, params);
-    await getExercises();
+    setSelectedExercise(exercise);
+    setDeleteExerciseDialogOpen(true);
   };
 
   const handleEditButton = (exercise: ExerciseInterface) => () => {
@@ -142,23 +142,32 @@ export default function Exercises() {
           </>
         )}
       </Container>
-      {training ? (
+      {training && (
         <CreateExerciseDialog
           open={createExerciseDialogOpen}
           setOpen={setCreateExerciseDialogOpen}
           getExercises={getExercises}
           trainingId={training}
         />
-      ) : undefined}
+      )}
 
-      {selectedExercise ? (
+      {selectedExercise && (
         <EditExerciseDialog
           open={editExerciseDialogOpen}
           setOpen={setEditExerciseDialogOpen}
           getExercises={getExercises}
           exercise={selectedExercise}
         />
-      ) : undefined}
+      )}
+
+      {selectedExercise && (
+        <DeleteExerciseDialog
+          open={deleteExerciseDialogOpen}
+          setOpen={setDeleteExerciseDialogOpen}
+          getExercises={getExercises}
+          exercise={selectedExercise}
+        />
+      )}
     </>
   );
 }
