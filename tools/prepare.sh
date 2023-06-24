@@ -4,7 +4,7 @@ docker compose exec web composer install
 
 docker compose exec web cp .env.example .env
 docker compose exec web php artisan optimize:clear
-docker compose exec web chmod -R 777 ./storage/
+docker compose exec web chmod -R a+rw ./storage/
 
 while true # TODO: Think of a better solution, because this feels wrong.
 do
