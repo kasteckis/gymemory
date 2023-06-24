@@ -1,10 +1,10 @@
-#!/bin/bash
 docker compose stop
 docker compose up -d --build
 docker compose exec web composer install
 
 docker compose exec web cp .env.example .env
 docker compose exec web php artisan optimize:clear
+docker compose exec web chmod -R 777 ./storage/
 
 while true # TODO: Think of a better solution, because this feels wrong.
 do
