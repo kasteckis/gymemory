@@ -1,5 +1,5 @@
 # Use image which contains apache with php
-FROM php:8.1-apache
+FROM php:8.2-apache
 RUN apt-get update && apt-get upgrade -y
 # Install packages needed to install php extensions
 RUN apt-get install git zlib1g-dev libxml2-dev libzip-dev zip unzip -y
