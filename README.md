@@ -1,6 +1,6 @@
 # Gymemory
 
-Gymemory is a web application for managing your gym workouts and exercises.
+Gymemory is a web application for managing your ongoing gym workout and exercises. I created this project when I started learning Laravel.
 
 ![gymemory](readme.gif)
 
